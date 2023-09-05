@@ -2,15 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class User extends Model
+class Subject extends Model
 {
-    use HasUuids;
-    use HasFactory;
-
     /**
      * The primary key for the model.
      *
@@ -32,12 +28,7 @@ class User extends Model
      */
     protected $fillable = [
         'id',
-        'first_name',
-        'last_name',
-        'email',
-        'username',
-        'password',
-        'salt',
-        'role',
+        'subject_name',
+        'subject_description',
     ];
 }

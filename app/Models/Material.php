@@ -6,10 +6,10 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class User extends Model
+class Material extends Model
 {
-    use HasUuids;
     use HasFactory;
+    use HasUuids;
 
     /**
      * The primary key for the model.
@@ -32,12 +32,17 @@ class User extends Model
      */
     protected $fillable = [
         'id',
-        'first_name',
-        'last_name',
-        'email',
-        'username',
-        'password',
-        'salt',
-        'role',
+        'subject_teacher_id',
+        'material_title',
+        'material_description',
+        'material_file_path',
     ];
+
+    /**
+     * Get the subject teacher associated with the material.
+     */
+    public function subjectTeacher()
+    {
+        return $this->belongsTo(SubjectTeacher::class);
+    }
 }
