@@ -6,10 +6,10 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class User extends Model
+class AssignmentStudent extends Model
 {
-    use HasUuids;
     use HasFactory;
+    use HasUuids;
 
     /**
      * The primary key for the model.
@@ -32,12 +32,24 @@ class User extends Model
      */
     protected $fillable = [
         'id',
-        'first_name',
-        'last_name',
-        'email',
-        'username',
-        'password',
-        'salt',
-        'role',
+        'assignment_id',
+        'student_id',
+        'date_of_submission',
     ];
+
+    /**
+     * Get the assignment associated with the assignment_student.
+     */
+    public function assignment()
+    {
+        return $this->belongsTo(Assignment::class);
+    }
+
+    /**
+     * Get the student associated with the assignment_student.
+     */
+    public function student()
+    {
+        return $this->belongsTo(User::class, 'student_id');
+    }
 }
