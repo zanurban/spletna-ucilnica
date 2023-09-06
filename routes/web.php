@@ -1,18 +1,118 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
+use App\Http\Controllers\SubjectController;
+use App\Http\Controllers\TeachersController;
+use App\Http\Controllers\StudentsController;
+use App\Http\Controllers\MaterialsController;
+use App\Http\Controllers\AssignmentsController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\StudentsSubjectController;
+use App\Http\Controllers\AssignmentSubmissionController;
 
 Route::get('/', function () {
     return view('layout');
+});
+
+/**
+ * Admin routes
+ */
+Route::prefix('admin')->group(function () {
+
+    /**
+     * Routes for manipulating subject data
+     */
+    Route::prefix('/subject')->group(function () {
+        Route::get('/new', [SubjectController::class, 'showForm'])->name('subject.create');
+        Route::post('/new', [SubjectController::class, 'save'])->name('subject.create');
+        Route::get('/edit/{subjectId}', [SubjectController::class, 'showForm'])->name('subject.update');
+        Route::put('/edit/{subjectId}', [SubjectController::class, 'update'])->name('subject.update');
+        Route::delete('/delete/{subjectId}', [SubjectController::class, 'delete'])->name('subject.delete');
+    });
+
+    /**
+     * Routes for manipulating teacher data
+     */
+    Route::prefix('/teacher')->group(function () {
+        Route::get('/new', [TeachersController::class, 'showForm'])->name('teacher.create');
+        Route::post('/new', [TeachersController::class, 'save'])->name('teacher.create');
+        Route::get('/edit/{teacherId}', [TeachersController::class, 'showForm'])->name('teacher.update');
+        Route::put('/edit/{teacherId}', [TeachersController::class, 'update'])->name('teacher.update');
+        Route::delete('/delete/{teacherId}', [TeachersController::class, 'delete'])->name('teacher.delete');
+    });
+
+    /**
+     * Routes for manipulating student data
+     */
+    Route::prefix('/student')->group(function () {
+        Route::get('/new', [StudentsController::class, 'showForm'])->name('student.create');
+        Route::post('/new', [StudentsController::class, 'save'])->name('student.create');
+        Route::get('/edit/{studentId}', [StudentsController::class, 'showForm'])->name('student.update');
+        Route::put('/edit/{studentId}', [StudentsController::class, 'update'])->name('student.update');
+        Route::delete('/delete/{studentId}', [StudentsController::class, 'delete'])->name('student.delete');
+    });
+});
+
+/**
+ * Teacher routes
+ */
+Route::prefix('teacher')->group(function () {
+
+    /**
+     * Routes for manipulating with material
+     */
+    Route::prefix('/material')->group(function () {
+        Route::get('/new', [MaterialsController::class, 'showForm'])->name('material.create');
+        Route::post('/new', [MaterialsController::class, 'save'])->name('material.create');
+        Route::get('/edit/{materialId}', [MaterialsController::class, 'showForm'])->name('material.update');
+        Route::put('/edit/{materialId}', [MaterialsController::class, 'update'])->name('material.update');
+        Route::delete('/delete/{materialId}', [MaterialsController::class, 'delete'])->name('material.delete');
+    });
+
+    /**
+     * Routes for manipulating assignments and downloading submissions
+     */
+    Route::prefix('/assigment')->group(function () {
+        Route::get('/new', [AssignmentsController::class, 'showForm'])->name('assigment.create');
+        Route::post('/new', [AssignmentsController::class, 'save'])->name('assigment.create');
+        Route::get('/edit/{assigmentId}', [AssignmentsController::class, 'showForm'])->name('assigment.update');
+        Route::put('/edit/{assigmentId}', [AssignmentsController::class, 'update'])->name('assigment.update');
+        Route::delete('/delete/{assigmentId}', [AssignmentsController::class, 'delete'])->name('assigment.delete');
+
+        Route::get('/download', [AssignmentsController::class, 'downloadAllSubmissions'])->name('assigment.downloadAll');
+        Route::get('/download/{studentId}', [AssignmentsController::class, 'downloadStudentsSubmission'])->name('assigment.downloadSpecific');
+    });
+
+});
+
+/**
+ * Student routes
+ */
+Route::prefix('student')->group(function () {
+
+    /**
+     * Routes for manipulating profile
+     */
+    Route::prefix('/profile')->group(function () {
+        Route::get('/new', [ProfileController::class, 'showForm'])->name('profile.create');
+        Route::post('/new', [ProfileController::class, 'save'])->name('profile.create');
+        Route::get('/edit/{studentId}', [ProfileController::class, 'showForm'])->name('profile.update');
+        Route::put('/edit/{studentId}', [ProfileController::class, 'update'])->name('profile.update');
+        //Route::delete('/delete/{studentId}', [ProfileController::class, 'delete'])->name('profile.delete');
+        //TODO: check if deletion of profile is possible
+    });
+
+    /**
+     * Routes for accessing subject and submitting assignments
+     */
+    Route::prefix('/subject')->group(function () {
+        Route::get('/{subjectId}', [StudentsSubjectController::class, 'showForm'])->name('subject.display');
+
+        Route::prefix('/{subjectId}/assignment')->group(function () {
+            Route::get('/{assignmentId}', [AssignmentSubmissionController::class, 'showAssigment'])->name('assigment.show');
+            Route::post('/{assignmentId}', [AssignmentSubmissionController::class, 'submit'])->name('assigment.submit');
+            Route::put('/{assignmentId}', [AssignmentSubmissionController::class, 'resubmit'])->name('assigment.resubmit');
+            Route::delete('/delete/{assignmentId}', [AssignmentSubmissionController::class, 'delete'])->name('assigment.delete');
+        });
+    });
 });
