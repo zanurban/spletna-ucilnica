@@ -2,7 +2,7 @@
 
 @section('content')
     <h1>Vnesite podatke o predmetu</h1>
-    <div class="col-md-12" style="margin-left: 500px">
+    <div class="col-md-12">
         <x-form
             submitRouteName="subject"
             backRouteName="subject.list"
