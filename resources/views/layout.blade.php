@@ -25,7 +25,7 @@
 
 
         .sidebar a {
-            
+
             /* Take up available space */
             padding: 10px;
             text-decoration: none;
@@ -85,19 +85,17 @@
             overflow-x: hidden;
         }
         .content{
-          display: flex;
-          width: 100%;
-          height: 100%;
-          background-color: green;
-          overflow: hidden;
-          padding: 10px;
+            display: flex;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            padding: 10px;
         }
         .main{
-          height: calc(100vh - 60px);
-          width: 100%;
-          background-color: black;
-          display: grid;
-          grid-template-columns: 15% 85%;
+            height: calc(100vh - 60px);
+            width: 100%;
+            display: grid;
+            grid-template-columns: 15% 85%;
         }
     </style>
 </head>
