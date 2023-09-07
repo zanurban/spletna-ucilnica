@@ -14,8 +14,8 @@
 
             <thead>
             <tr>
-                <th>Subject Name</th>
-                <th>Subject Description</th>
+                <th>Ime predmeta</th>
+                <th>Opis predmeta</th>
                 <th></th>
             </tr>
             </thead>
@@ -29,8 +29,8 @@
                         <form action="{{ route('subject.delete', ['subjectId' => $row?->id]) }}" method="POST">
                             @method('DELETE')
                             @csrf
-                            <a href="{{ route('subject.update', ['subjectId' => $row?->id]) }}" class="btn btn-primary btn-sm">Edit</a>
-                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Ali ste preričani, da želite izbrisati ta element?');">Delete</button>
+                            <a href="{{ route('subject.update', ['subjectId' => $row?->id]) }}" class="btn btn-primary btn-sm">Uredi</a>
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Ali ste preričani, da želite izbrisati ta element?');">Izbriši</button>
                         </form>
                     </td>
                 </tr>
