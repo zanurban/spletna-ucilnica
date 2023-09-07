@@ -12,7 +12,7 @@ use App\Http\Controllers\AssignmentSubmissionController;
 
 Route::get('/', function () {
     return view('layout');
-});
+})->name('home');
 
 /**
  * Admin routes
@@ -23,6 +23,7 @@ Route::prefix('admin')->group(function () {
      * Routes for manipulating subject data
      */
     Route::prefix('/subject')->group(function () {
+        Route::get('/list', [SubjectController::class, 'list'])->name('subject.list');
         Route::get('/new', [SubjectController::class, 'showForm'])->name('subject.create');
         Route::post('/new', [SubjectController::class, 'save'])->name('subject.create');
         Route::get('/edit/{subjectId}', [SubjectController::class, 'showForm'])->name('subject.update');
