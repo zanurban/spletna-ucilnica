@@ -29,7 +29,7 @@ class UserFactory extends Factory
             'username' => $this->faker->unique()->userName,
             'password' => bcrypt($this->faker->word . $salt), // You can change this to generate hashed passwords
             'salt' => $salt, // Generate a random salt
-            'role' => $this->faker->randomElement(['admin', 'user']),
+            'role' => $this->faker->randomElement(['adm', 'usr', 'tcr']),
             'created_at' => now(),
             'updated_at' => now(),
         ];
