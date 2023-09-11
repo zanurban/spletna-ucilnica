@@ -19,14 +19,16 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+        $salt = Str::random(16);
+
         return [
             'id' => Str::uuid(),
             'first_name' => $this->faker->firstName,
             'last_name' => $this->faker->lastName,
             'email' => $this->faker->unique()->safeEmail,
             'username' => $this->faker->unique()->userName,
-            'password' => bcrypt('password'), // You can change this to generate hashed passwords
-            'salt' => Str::random(16), // Generate a random salt
+            'password' => bcrypt($this->faker->word . $salt), // You can change this to generate hashed passwords
+            'salt' => $salt, // Generate a random salt
             'role' => $this->faker->randomElement(['admin', 'user']),
             'created_at' => now(),
             'updated_at' => now(),
