@@ -17,7 +17,6 @@ Route::get('/', function () {
 
 Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
-
 Route::group(['middleware' => 'login'], function () {
     /**
      * Log in and log out routes
@@ -25,7 +24,6 @@ Route::group(['middleware' => 'login'], function () {
     Route::get('/login', [LoginController::class, 'showForm'])->name('login');
     Route::post('/login', [LoginController::class, 'login'])->name('login.create');
 });
-
 
 Route::group(['middleware' => 'admin'], function () {
     /**
