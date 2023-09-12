@@ -1,4 +1,5 @@
 <form
+    class="form"
     action="{{ isset($existingData->id) ? route($submitRouteName . '.update', [$variableName => $existingData->id]) : route($submitRouteName . '.create') }}"
     method="POST">
     @csrf

@@ -1,26 +1,17 @@
 @extends('layout')
 
 @section('content')
+<div class="box">
     <h1>Obstoječi predmeti</h1>
 
-    @if (session('message'))
-        <div class="alert alert-success">
-            {{ session('message') }}
-        </div>
-    @endif
-
-    <div class="col-md-12">
+    <div class="col-md-12 table">
         <table>
-
-            <thead>
             <tr>
                 <th>Ime predmeta</th>
                 <th>Opis predmeta</th>
                 <th></th>
             </tr>
-            </thead>
 
-            <tbody>
             @if(count($data) > 0)
                 @foreach($data as $row)
                     <tr>
@@ -41,7 +32,16 @@
                     </tr>
                 @endforeach
             @endif
-            </tbody>
         </table>
+        <button type="submit" class="btn btn-primary"
+                                        onclick="return confirm('Dodaj predmet?');">
+                                    Dodaj predmet
+                                </button>
     </div>
+    @if (session('message'))
+    <div class="alert alert-success auto-dismiss">
+        {{ session('message') }}
+    </div>
+@endif
+</div>
 @endsection
