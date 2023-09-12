@@ -10,6 +10,6 @@
         {{ $slot }}
     </div>
 
-    <button type="submit" class="btn btn-primary">Save</button>
-    <a href="{{ route($backRouteName) }}" class="btn btn-default" style="margin-left: 10px">Back</a>
+    <button type="submit" class="btn btn-primary">{{ $submitButtonName }}</button>
+    <a href="{{ route($backRouteName) }}" class="btn btn-default" style="margin-left: 10px">Nazaj</a>
 </form>

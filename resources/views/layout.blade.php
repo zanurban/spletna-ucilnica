@@ -141,13 +141,12 @@
 
 <body>
     @include("partials.header")
-    @include("components.login")
-    {{-- <div class="main">
+     <div class="main">
       @include('partials.navBar')
       <div class="content">
           @yield('content')
       </div>
-    </div> --}}
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
