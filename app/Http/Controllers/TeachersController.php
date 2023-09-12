@@ -4,14 +4,18 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Subject;
+use App\Models\SubjectTeacher;
+use Illuminate\Support\Facades\Hash;
 
 class TeachersController extends Controller
 {
     public function list()
     {
+
         return view('admin.teacher.list', [
             'title' => 'Prikaz učiteljev',
-            'data' => User::where('role', 'tch')->get(),
+            'data' => User::where('role', 'tch')->with('subjects')->get(),
         ]);
     }
 
@@ -25,11 +29,19 @@ class TeachersController extends Controller
      */
     public function showForm(Request $request, User $teacherId)
     {
+        $existingDataSubject = Subject::all();
+        $currentSubjects = SubjectTeacher::where('teacher_id', $teacherId->id)
+            ->pluck('subject_id')
+            ->toArray();
+
         return view('admin.teacher.edit', [
             'title' => 'Urejanje učitelja',
             'formData' => $teacherId,
+            'existingDataSubject' => $existingDataSubject,
+            'currentSubjects' => $currentSubjects,
         ]);
     }
+
 
     /**
      * Function for responding to POST request when admin is trying to save a new subject
@@ -44,40 +56,69 @@ class TeachersController extends Controller
         $validatedData = $request->validate([
             'first_name' => ['required', 'max:60'],
             'last_name' => ['required', 'max:60'],
-            'email' => ['required', 'max:128']
+            'email' => ['required', 'max:128', 'email'],
+            'username' => ['required', 'max:128', 'unique:users'],
+            'subjects' => ['required', 'array'],
+            'role' => ['required', 'in:adm,tch,usr'],
         ]);
 
-        $subject = new User([
+        $teacher = new User([
             'first_name' => $validatedData['first_name'],
             'last_name' => $validatedData['last_name'],
             'email' => $validatedData['email'],
+            'password' => Hash::make('password'.$validatedData['username']),
+            'username' => $validatedData['username'],
+            'role' => $validatedData['role'],
         ]);
-        $subject->save();
+        $teacher->save();
+
+        foreach ($request->subjects as $subjectId) {
+            SubjectTeacher::create([
+                'subject_id' => $subjectId,
+                'teacher_id' => $teacher->id,
+            ]);
+        }
 
         return redirect()->route('teacher.list')->with('message', 'Učitelj je bil uspešno shranjen!');
     }
 
-    /**
-     * Function for responding to PUT/PATCH request when adminn is trying to update existing subject
-     * Data is firstly validated, in case of errors those are displayed, otherwise data is saved to database
-     * Operation finishes by redirecting to list page of all subject with completion message
-     *
-     * @param Request $request
-     * @param User $teacherId
-     * @return \Illuminate\Http\RedirectResponse
-     */
+
     public function update(Request $request, User $teacherId)
     {
         $validatedData = $request->validate([
             'first_name' => ['required', 'max:60'],
             'last_name' => ['required', 'max:60'],
-            'email' => ['required', 'max:128']
+            'email' => ['required', 'max:128'],
+            'subjects' => ['required', 'array'],
+            'role' => ['required', 'in:adm,tch,usr'],
         ]);
 
         $teacherId->update($validatedData);
 
+        $currentSubjectIds = SubjectTeacher::where('teacher_id', $teacherId->id)
+            ->pluck('subject_id')
+            ->toArray();
+
+        $subjectIdsToAdd = array_diff($request->subjects, $currentSubjectIds);
+        $subjectIdsToDelete = array_diff($currentSubjectIds, $request->subjects);
+
+        foreach ($subjectIdsToAdd as $subjectId) {
+            SubjectTeacher::create([
+                'subject_id' => $subjectId,
+                'teacher_id' => $teacherId->id,
+            ]);
+        }
+
+        SubjectTeacher::where('teacher_id', $teacherId->id)
+            ->whereIn('subject_id', $subjectIdsToDelete)
+            ->delete();
+
         return redirect()->route('teacher.list')->with('message', 'Učitelj je bil uspešno urejen!');
     }
+
+
+
+
 
     /**
      * Function for responding to DELETE request when admin is trying to delete existing subject

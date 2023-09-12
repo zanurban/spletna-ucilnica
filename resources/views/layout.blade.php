@@ -155,7 +155,7 @@
 
         .btn-primary {
             background-color: transparent;
-            color:#2b2c2c;
+            color: #2b2c2c;
             border-color: rgb(71, 68, 68);
         }
 
@@ -173,6 +173,8 @@
             width: 100%;
             height: 100%;
             padding: 20px;
+            overflow: scroll;
+            overflow-x: hidden;
         }
 
         h1 {
@@ -188,7 +190,8 @@
         .table table tr {
             background-color: #e9ecef;
         }
-        .table table tr td{
+
+        .table table tr td {
             padding-left: 7px;
         }
 
@@ -217,20 +220,26 @@
 
         .auto-dismiss {
             transition: opacity 0.3s;
-            margin-top:10px;
+            margin-top: 10px;
         }
-        .btn-outline-danger, .add{
+
+        .btn-outline-danger,
+        .add {
             display: flex;
-            margin-left:3px;
+            margin-left: 3px;
             justify-content: center;
             align-items: center;
         }
-        .btn-outline-danger svg, .add svg{
-            margin-right:3px;
+
+        .btn-outline-danger svg,
+        .add svg {
+            margin-right: 3px;
         }
+
         .add:hover svg {
-    fill: white; /* This is the default color for .btn-primary. Adjust as needed. */
-}
+            fill: white;
+        
+        }
     </style>
 </head>
 

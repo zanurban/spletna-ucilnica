@@ -39,6 +39,7 @@ Route::prefix('admin')->group(function () {
      * Routes for manipulating teacher data
      */
     Route::prefix('/teacher')->group(function () {
+        Route::get('/list', [TeachersController::class, 'list'])->name('teacher.list');
         Route::get('/new', [TeachersController::class, 'showForm'])->name('teacher.create');
         Route::post('/new', [TeachersController::class, 'save'])->name('teacher.create');
         Route::get('/edit/{teacherId}', [TeachersController::class, 'showForm'])->name('teacher.update');
