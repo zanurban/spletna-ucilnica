@@ -97,12 +97,51 @@
             display: grid;
             grid-template-columns: 15% 85%;
         }
+        .frame{
+            height: calc(100vh - 60px);
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            background-color: aqua;
+            padding: 7% 25%;
+        }
+        .loginForm{
+            background-color: green;
+            border: 15px solid black;
+            border-radius: 25px;
+            display: grid;
+            grid-template-columns: 50% 50%;
+        }
+        .form{
+            width: 100%;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+        }
+        .box{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        .box-center{
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+        .box input{
+            margin-left: 30px;
+        }
+        .box-center input{
+            margin-left: 30px;
+        }
     </style>
 </head>
 
 <body>
     @include("partials.header")
-    <div class="main">
+     <div class="main">
       @include('partials.navBar')
       <div class="content">
           @yield('content')

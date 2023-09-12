@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 /**
@@ -25,9 +26,9 @@ class UserFactory extends Factory
             'last_name' => $this->faker->lastName,
             'email' => $this->faker->unique()->safeEmail,
             'username' => $this->faker->unique()->userName,
-            'password' => bcrypt('password'), // You can change this to generate hashed passwords
+            'password' => Hash::make('aspiria00'), // You can change this to generate hashed passwords
             'salt' => Str::random(16), // Generate a random salt
-            'role' => $this->faker->randomElement(['admin', 'user']),
+            'role' => $this->faker->randomElement(['adm', 'usr', 'tch']),
             'created_at' => now(),
             'updated_at' => now(),
         ];

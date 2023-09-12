@@ -9,10 +9,14 @@ use App\Http\Controllers\AssignmentsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StudentsSubjectController;
 use App\Http\Controllers\AssignmentSubmissionController;
+use App\Http\Controllers\LoginController;
 
 Route::get('/', function () {
     return view('layout');
 })->name('home');
+
+Route::get('/login', [LoginController::class, 'showForm'])->name('login');
+Route::post('/login', [LoginController::class, 'login'])->name('login.create');
 
 /**
  * Admin routes
