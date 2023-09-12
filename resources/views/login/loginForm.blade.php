@@ -1,6 +1,7 @@
 @extends('layout')
 
 @section('content')
+    <div class="box">
     <h1>Prijava v uporabniški profil</h1>
     <div class="col-md-12">
         <x-form
@@ -23,5 +24,6 @@
             ></x-input>
 
         </x-form>
+    </div>
     </div>
 @endsection
