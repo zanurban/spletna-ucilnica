@@ -154,13 +154,14 @@
         }
 
         .btn-primary {
-            background-color: rgb(71, 68, 68);
+            background-color: transparent;
+            color:#2b2c2c;
             border-color: rgb(71, 68, 68);
         }
 
         .btn-primary:hover {
-            background-color: rgb(31, 30, 30);
-            border-color: rgb(31, 30, 30);
+            background-color: none;
+            border-color: none;
         }
 
         .form-control:focus {
@@ -179,22 +180,25 @@
         }
 
         .table {
-            border: 10px solid #d6d8da;
+            border: 3px solid #d6d8da;
             border-radius: 20px;
-            background-color: #e9ecef;
+            background-color: #f0f0f5;
         }
 
         .table table tr {
             background-color: #e9ecef;
         }
+        .table table tr td{
+            padding-left: 7px;
+        }
 
         .table table tr:nth-child(even) {
-            background-color: #afb1b4;
+            background-color: #ccced1;
         }
 
         .table table tr:hover {
-            background-color: #2b2c2c;
-            color: antiquewhite;
+            background-color: #c2c9c9;
+            color: #2b2c2c;
         }
 
         .table table th {
@@ -214,6 +218,18 @@
         .auto-dismiss {
             transition: opacity 0.3s;
         }
+        .btn-outline-danger, .add{
+            display: flex;
+            margin-left:3px;
+            justify-content: center;
+            align-items: center;
+        }
+        .btn-outline-danger svg, .add svg{
+            margin-right:3px;
+        }
+        .add:hover svg {
+    fill: white; /* This is the default color for .btn-primary. Adjust as needed. */
+}
     </style>
 </head>
 
