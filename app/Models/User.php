@@ -5,11 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Auth\Authenticatable;
 
 class User extends Model
 {
     use HasUuids;
     use HasFactory;
+    use Authenticatable;
 
     /**
      * The primary key for the model.

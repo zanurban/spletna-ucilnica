@@ -9,10 +9,25 @@ use App\Http\Controllers\AssignmentsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StudentsSubjectController;
 use App\Http\Controllers\AssignmentSubmissionController;
+use App\Http\Controllers\LoginController;
+
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider and all of them will
+| be assigned to the "web" middleware group. Make something great!
+|
+*/
 
 Route::get('/', function () {
     return view('layout');
 })->name('home');
+
+Route::get('/login', [LoginController::class, 'showForm'])->name('login');
+Route::post('/login', [LoginController::class, 'login'])->name('login.create');
 
 /**
  * Admin routes

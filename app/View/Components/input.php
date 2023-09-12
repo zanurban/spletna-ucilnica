@@ -14,8 +14,8 @@ class input extends Component
     public function __construct(
         public string $name,
         public string $displayedName,
-        public string $type,
-        public string $value,
+        public string $type = 'text',
+        public string $value = '',
     )
     {
 

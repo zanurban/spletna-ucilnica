@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 class UsersTableSeeder extends Seeder
@@ -22,7 +23,7 @@ class UsersTableSeeder extends Seeder
             'last_name' => 'Zabukovnik',
             'email' => 'zabukm@example.com',
             'username' => 'zabukm',
-            'password' => bcrypt('aspiria00' . $salt),
+            'password' => Hash::make('aspiria00'),
             'salt' => $salt,
             'role' => 'adm',
             'created_at' => now(),
