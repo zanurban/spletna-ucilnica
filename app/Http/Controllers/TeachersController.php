@@ -29,7 +29,6 @@ class TeachersController extends Controller
      */
     public function showForm(Request $request, User $teacherId)
     {
-        $existingDataSubject = Subject::all();
         $currentSubjects = SubjectTeacher::where('teacher_id', $teacherId->id)
             ->pluck('subject_id')
             ->toArray();
@@ -37,11 +36,10 @@ class TeachersController extends Controller
         return view('admin.teacher.edit', [
             'title' => 'Urejanje učitelja',
             'formData' => $teacherId,
-            'existingDataSubject' => $existingDataSubject,
+            'existingDataSubject' => Subject::all(),
             'currentSubjects' => $currentSubjects,
         ]);
     }
-
 
     /**
      * Function for responding to POST request when admin is trying to save a new subject
@@ -82,7 +80,6 @@ class TeachersController extends Controller
         return redirect()->route('teacher.list')->with('message', 'Učitelj je bil uspešno shranjen!');
     }
 
-
     public function update(Request $request, User $teacherId)
     {
         $validatedData = $request->validate([
@@ -115,10 +112,6 @@ class TeachersController extends Controller
 
         return redirect()->route('teacher.list')->with('message', 'Učitelj je bil uspešno urejen!');
     }
-
-
-
-
 
     /**
      * Function for responding to DELETE request when admin is trying to delete existing subject
