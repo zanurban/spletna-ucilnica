@@ -134,9 +134,9 @@
         .form {
             width: 80%;
             padding: 20px;
-            border: 10px solid #d6d8da;
+            border: 3px solid #d6d8da;
             border-radius: 20px;
-            background-color: #e9ecef;
+            background-color: #f0f0f5;
         }
 
         .form-content {
@@ -217,6 +217,7 @@
 
         .auto-dismiss {
             transition: opacity 0.3s;
+            margin-top:10px;
         }
         .btn-outline-danger, .add{
             display: flex;
