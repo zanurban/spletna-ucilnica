@@ -29,6 +29,7 @@ Route::group(['middleware' => 'admin'], function () {
     /**
      * Admin routes
      */
+
     Route::prefix('admin')->group(function () {
 
         /**
@@ -43,11 +44,13 @@ Route::group(['middleware' => 'admin'], function () {
             Route::delete('/delete/{subjectId}', [SubjectController::class, 'delete'])->name('subject.delete');
         });
 
+
         /**
          * Routes for manipulating teacher data
          */
         Route::prefix('/teacher')->group(function () {
             Route::get('/new', [TeachersController::class, 'showForm'])->name('teacher.create');
+            Route::get('/list', [TeachersController::class, 'list'])->name('teacher.list');
             Route::post('/new', [TeachersController::class, 'save'])->name('teacher.create');
             Route::get('/edit/{teacherId}', [TeachersController::class, 'showForm'])->name('teacher.update');
             Route::put('/edit/{teacherId}', [TeachersController::class, 'update'])->name('teacher.update');

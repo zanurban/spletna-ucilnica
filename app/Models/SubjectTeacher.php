@@ -41,7 +41,7 @@ class SubjectTeacher extends Model
      */
     public function subject()
     {
-        return $this->belongsTo(Subject::class);
+        return $this->hasMany(Subject::class);
     }
 
     /**
@@ -49,6 +49,6 @@ class SubjectTeacher extends Model
      */
     public function teacher()
     {
-        return $this->belongsTo(User::class, 'teacher_id');
+        return $this->hasMany(User::class, 'teacher_id');
     }
 }
