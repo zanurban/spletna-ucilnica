@@ -6,6 +6,6 @@
            value="{{ old($name, $value) }}">
 
     @error($name)
-        <div class="alert alert-danger">{{ $message }}</div>
+        <div class="alert alert-danger auto-dismiss">{{ $message }}</div>
     @enderror
 </div>

@@ -1,6 +1,7 @@
 @extends('layout')
 
 @section('content')
+<div class="box">
     <h1>Vnesite podatke o predmetu</h1>
     <div class="col-md-12">
         <x-form
@@ -26,4 +27,5 @@
 
         </x-form>
     </div>
+</div>
 @endsection
