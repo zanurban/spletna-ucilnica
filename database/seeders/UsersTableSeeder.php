@@ -23,7 +23,6 @@ class UsersTableSeeder extends Seeder
             'email' => 'zabukm@example.com',
             'username' => 'zabukm',
             'password' => Hash::make('aspiria00'),
-            'salt' => '',
             'role' => 'adm',
             'created_at' => now(),
             'updated_at' => now(),

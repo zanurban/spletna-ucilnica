@@ -27,7 +27,6 @@ class UserFactory extends Factory
             'email' => $this->faker->unique()->safeEmail,
             'username' => $this->faker->unique()->userName,
             'password' => Hash::make('aspiria00'), // You can change this to generate hashed passwords
-            'salt' => Str::random(16), // Generate a random salt
             'role' => $this->faker->randomElement(['adm', 'usr', 'tch']),
             'created_at' => now(),
             'updated_at' => now(),
