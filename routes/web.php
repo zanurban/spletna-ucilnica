@@ -62,6 +62,7 @@ Route::group(['middleware' => 'admin'], function () {
          */
         Route::prefix('/student')->group(function () {
             Route::get('/new', [StudentsController::class, 'showForm'])->name('student.create');
+            Route::get('/list', [StudentsController::class, 'list'])->name('student.list');
             Route::post('/new', [StudentsController::class, 'save'])->name('student.create');
             Route::get('/edit/{studentId}', [StudentsController::class, 'showForm'])->name('student.update');
             Route::put('/edit/{studentId}', [StudentsController::class, 'update'])->name('student.update');

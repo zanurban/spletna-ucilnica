@@ -77,5 +77,9 @@ class User extends Model implements Authenticatable
     {
         return $this->hasManyThrough(Subject::class, SubjectTeacher::class, 'teacher_id', 'id', 'id', 'subject_id');
     }
+    public function subject()
+    {
+        return $this->hasManyThrough(Subject::class, SubjectTeacher::class, 'teacher_id', 'id', 'id', 'subject_id');
+    }
 
 }

@@ -124,6 +124,8 @@ class TeachersController extends Controller
     public function delete(Request $request, User $teacherId)
     {
         $teacherId->delete();
+        
+        SubjectTeacher::where('geacher_id', $teacherId->id)->delete();
 
         return redirect()->route('teacher.list')->with('message', 'Učitelj je bil uspešno izbrisan!');
     }
