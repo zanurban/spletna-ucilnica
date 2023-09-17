@@ -79,7 +79,13 @@ class User extends Model implements Authenticatable
     }
     public function subject()
     {
-        return $this->hasManyThrough(Subject::class, SubjectTeacher::class, 'teacher_id', 'id', 'id', 'subject_id');
+        return $this->belongsToMany(Subject::class, 'subject_students', 'student_id', 'subject_teacher_id')
+            ->using(SubjectStudent::class)
+            ->withPivot('subject_teacher_id')
+            ->join('subject_teachers', 'subject_students.subject_teacher_id', '=', 'subject_teachers.id')
+            ->join('subjects as subjects_alias', 'subject_teachers.subject_id', '=', 'subjects_alias.id')
+            ->select('subjects_alias.*');
     }
+    
 
 }

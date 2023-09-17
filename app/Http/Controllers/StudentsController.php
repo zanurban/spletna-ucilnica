@@ -13,22 +13,44 @@ class StudentsController extends Controller
 {
     public function list()
     {
+        $students = User::where('users.role', 'usr')
+            ->leftJoin('subject_students', 'users.id', '=', 'subject_students.student_id')
+            ->leftJoin('subject_teachers', 'subject_students.subject_teacher_id', '=', 'subject_teachers.id')
+            ->leftJoin('subjects', 'subject_teachers.subject_id', '=', 'subjects.id')
+            ->select('users.*', 'subjects.subject_name as subject_name')
+            ->get();
+
+        $grouped = $students->groupBy('id')->map(function ($group) {
+            return [
+                'id' => $group[0]->id,
+                'first_name' => $group[0]->first_name,
+                'last_name' => $group[0]->last_name,
+                'email' => $group[0]->email,
+                'username' => $group[0]->username,
+                'role' => $group[0]->role,
+                // ... any other user fields you need
+                'subjects' => $group->pluck('subject_name')->filter()->all(),
+            ];
+        });
+
+        $result = $grouped->values()->all();
+        
         return view('admin.student.list', [
             'title' => 'Prikaz učencev',
-            'data' => User::where('role', 'usr')->with('teachers')->with('subjects')->get(),
+            'data' => $result,
         ]);
     }
-    
+
 
     public function showForm(Request $request, User $studentId)
     {
         $subjectTeacherIds = SubjectStudent::where('student_id', $studentId->id)
             ->pluck('subject_teacher_id')
             ->toArray();
-    
+
         $existingDataSubjectTeacher = SubjectTeacher::with(['subject', 'teacher'])->get();
         $currentSubjectTeacherIds = $subjectTeacherIds;
-    
+
         return view('admin.student.edit', [
             'title' => 'Urejanje učenca',
             'formData' => $studentId,
@@ -36,7 +58,7 @@ class StudentsController extends Controller
             'currentSubjectTeacherIds' => $currentSubjectTeacherIds,
         ]);
     }
-    
+
 
     public function save(Request $request)
     {
