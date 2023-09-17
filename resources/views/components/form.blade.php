@@ -1,7 +1,8 @@
 <form
     class="form"
-    action="{{ isset($existingData->id) ? route($submitRouteName . '.update', [$variableName => $existingData->id]) : route($submitRouteName . '.create') }}"
-    method="POST">
+    action="{{ isset($existingData->id) ? route($submitRouteName . '.update', [$variableName => $existingData->id, $optionalVariableName => $optionalId]) : route($submitRouteName . '.create', [$optionalVariableName => $optionalId]) }}"
+    method="POST"
+    enctype="multipart/form-data">
     @csrf
     @if(isset($existingData->id))
         @method('PUT')
@@ -12,5 +13,5 @@
     </div>
 
     <button type="submit" class="btn btn-primary">{{ $submitButtonName }}</button>
-    <a href="{{ route($backRouteName) }}" class="btn btn-default" style="margin-left: 10px">Nazaj</a>
+    <a href="{{ route($backRouteName, [$optionalVariableName => $optionalId]) }}" class="btn btn-default" style="margin-left: 10px">Nazaj</a>
 </form>
