@@ -70,11 +70,12 @@ class User extends Model implements Authenticatable
         'email',
         'username',
         'password',
-        'salt',
         'role',
     ];
-    public function subjects(): BelongsToMany
+
+    public function subjects()
     {
-        return $this->belongsToMany(Subject::class, 'subject_teachers', 'teacher_id');
+        return $this->hasManyThrough(Subject::class, SubjectTeacher::class, 'teacher_id', 'id', 'id', 'subject_id');
     }
+
 }
