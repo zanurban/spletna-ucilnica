@@ -128,8 +128,6 @@ class StudentsController extends Controller
     {
         $studentId->delete();
 
-        SubjectStudent::where('student_id', $studentId->id)->delete();
-
         return redirect()->route('student.list')->with('message', 'Učenec je bil uspešno izbrisan!');
     }
 }
