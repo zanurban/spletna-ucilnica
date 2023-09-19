@@ -18,11 +18,13 @@ class StudentsSubjectController extends Controller
             ->leftJoin('subject_students', 'users.id', '=', 'subject_students.student_id')
             ->leftJoin('subject_teachers', 'subject_students.subject_teacher_id', '=', 'subject_teachers.id')
             ->leftJoin('subjects', 'subject_teachers.subject_id', '=', 'subjects.id')
-            ->select('subjects.subject_name', 'subjects.id as subject_id')
+            ->leftJoin('users as teachers', 'subject_teachers.teacher_id', '=', 'teachers.id')
+            ->select('subjects.subject_name', 'subjects.id as subject_id', 'teachers.first_name as teacher_first_name', 'teachers.last_name as teacher_last_name')
             ->get()
             ->filter(function ($item) {
                 return $item->subject_name !== null && $item->subject_id !== null;
             });
+
 
         return view('student.subject.listSubjects', [
             'title' => 'Prikaz predmetov',
