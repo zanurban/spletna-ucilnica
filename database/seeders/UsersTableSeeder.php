@@ -28,6 +28,30 @@ class UsersTableSeeder extends Seeder
             'updated_at' => now(),
         ]);
 
+        DB::table('Users')->insert([
+            'id' => Str::uuid(),
+            'first_name' => 'Žan',
+            'last_name' => 'Škorja',
+            'email' => 'skorja@example.com',
+            'username' => 'skorjaz',
+            'password' => Hash::make('aspiria00'),
+            'role' => 'tch',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        DB::table('Users')->insert([
+            'id' => Str::uuid(),
+            'first_name' => 'Lan',
+            'last_name' => 'Stokavnik',
+            'email' => 'stokavnik@example.com',
+            'username' => 'stokavnikl',
+            'password' => Hash::make('aspiria00'),
+            'role' => 'usr',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
         User::factory()->count(100)->create();
     }
 }
