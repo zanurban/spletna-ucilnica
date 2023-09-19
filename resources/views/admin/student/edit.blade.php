@@ -2,39 +2,39 @@
 
 @section('content')
     <div class="box">
-        <h1>Vnesite podatke o učitelju</h1>
+        <h1>Vnesite podatke o učencu</h1>
         <div class="col-md-12">
             <x-form
-                submitRouteName="teacher"
-                backRouteName="teacher.list"
-                variableName="teacherId"
+                submitRouteName="student"
+                backRouteName="student.list"
+                variableName="studentId"
                 :existingData="$formData"
             >
 
                 <x-input
                     name="first_name"
-                    displayedName="Ime učitelja"
+                    displayedName="Ime učenca"
                     type="text"
                     value="{{ $formData?->first_name }}"
                 ></x-input>
 
                 <x-input
                     name="last_name"
-                    displayedName="Priimek učitelja"
+                    displayedName="Priimek učenca"
                     type="text"
                     value="{{ $formData?->last_name }}"
                 ></x-input>
 
                 <x-input
                     name="email"
-                    displayedName="E-pošta učitelja"
+                    displayedName="E-pošta učenca"
                     type="email"
                     value="{{ $formData?->email }}"
                 ></x-input>
 
                 <x-input
                     name="username"
-                    displayedName="Uporabniško ime učitelja"
+                    displayedName="Uporabniško ime učenca"
                     type="text"
                     value="{{ $formData?->username }}"
                 ></x-input>
@@ -48,15 +48,17 @@
                     </select>
                 </div>
 
-                Seznam predmetov, ki jih poučuje učitelj
-                @foreach ($existingDataSubject as $subject)
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="subjects[]" value="{{ $subject->id }}"
-                            {{ in_array($subject->id, old('subjects', $currentSubjects)) ? 'checked' : '' }}>
+                Seznam predmetov, ki jih obiskuje učenec
+                @foreach ($existingDataSubjectTeacher as $subjectTeacher)
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="subjects[]" value="{{ $subjectTeacher->id }}"
+                        {{ in_array($subjectTeacher->id, old('subjects', $currentSubjectTeacherIds)) ? 'checked' : '' }}>
 
-                        <label class="form-check-label">{{ $subject->subject_name }}</label>
-                    </div>
-                @endforeach
+                    <label class="form-check-label">
+                        {{ $subjectTeacher->subject->subject_name }} - {{ $subjectTeacher->teacher->first_name }} {{ $subjectTeacher->teacher->last_name }}
+                    </label>
+                </div>
+            @endforeach
             </x-form>
         </div>
     </div>

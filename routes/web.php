@@ -62,6 +62,7 @@ Route::group(['middleware' => 'admin'], function () {
          */
         Route::prefix('/student')->group(function () {
             Route::get('/new', [StudentsController::class, 'showForm'])->name('student.create');
+            Route::get('/list', [StudentsController::class, 'list'])->name('student.list');
             Route::post('/new', [StudentsController::class, 'save'])->name('student.create');
             Route::get('/edit/{studentId}', [StudentsController::class, 'showForm'])->name('student.update');
             Route::put('/edit/{studentId}', [StudentsController::class, 'update'])->name('student.update');
@@ -79,28 +80,35 @@ Route::group(['middleware' => 'tch'], function () {
         /**
          * Routes for manipulating with material
          */
-        Route::prefix('/material')->group(function () {
-            Route::get('/new', [MaterialsController::class, 'showForm'])->name('material.create');
-            Route::post('/new', [MaterialsController::class, 'save'])->name('material.create');
-            Route::get('/edit/{materialId}', [MaterialsController::class, 'showForm'])->name('material.update');
-            Route::put('/edit/{materialId}', [MaterialsController::class, 'update'])->name('material.update');
-            Route::delete('/delete/{materialId}', [MaterialsController::class, 'delete'])->name('material.delete');
+        Route::prefix('/classroom')->group(function () {
+            Route::get('/list', [MaterialsController::class, 'listSubjects'])->name('subject_material.list');
+
+            Route::prefix('/{subjectId}')->group(function () {
+                Route::get('/list', [MaterialsController::class, 'list'])->name('material.list');
+
+                /**
+                 * Routes for manipulating assignments and downloading submissions
+                 */
+                Route::prefix('/assigment')->group(function () {
+                    Route::get('/new', [AssignmentsController::class, 'showForm'])->name('assigment.create');
+                    Route::post('/new', [AssignmentsController::class, 'save'])->name('assigment.create');
+                    Route::get('/edit/{assigmentId}', [AssignmentsController::class, 'showForm'])->name('assigment.update');
+                    Route::put('/edit/{assigmentId}', [AssignmentsController::class, 'update'])->name('assigment.update');
+                    Route::delete('/delete/{assigmentId}', [AssignmentsController::class, 'delete'])->name('assigment.delete');
+
+                    Route::get('/download', [AssignmentsController::class, 'downloadAllSubmissions'])->name('assigment.downloadAll');
+                    Route::get('/download/{studentId}', [AssignmentsController::class, 'downloadStudentsSubmission'])->name('assigment.downloadSpecific');
+                });
+
+                Route::prefix('/material')->group(function () {
+                    Route::get('/new', [MaterialsController::class, 'showForm'])->name('material.create');
+                    Route::post('/new', [MaterialsController::class, 'save'])->name('material.create');
+                    Route::get('/edit/{materialId}', [MaterialsController::class, 'showForm'])->name('material.update');
+                    Route::put('/edit/{materialId}', [MaterialsController::class, 'update'])->name('material.update');
+                    Route::delete('/delete/{materialId}', [MaterialsController::class, 'delete'])->name('material.delete');
+                });
+            });
         });
-
-        /**
-         * Routes for manipulating assignments and downloading submissions
-         */
-        Route::prefix('/assigment')->group(function () {
-            Route::get('/new', [AssignmentsController::class, 'showForm'])->name('assigment.create');
-            Route::post('/new', [AssignmentsController::class, 'save'])->name('assigment.create');
-            Route::get('/edit/{assigmentId}', [AssignmentsController::class, 'showForm'])->name('assigment.update');
-            Route::put('/edit/{assigmentId}', [AssignmentsController::class, 'update'])->name('assigment.update');
-            Route::delete('/delete/{assigmentId}', [AssignmentsController::class, 'delete'])->name('assigment.delete');
-
-            Route::get('/download', [AssignmentsController::class, 'downloadAllSubmissions'])->name('assigment.downloadAll');
-            Route::get('/download/{studentId}', [AssignmentsController::class, 'downloadStudentsSubmission'])->name('assigment.downloadSpecific');
-        });
-
     });
 });
 

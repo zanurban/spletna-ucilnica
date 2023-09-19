@@ -17,6 +17,8 @@ class form extends Component
         public string $backRouteName = 'home',
         public string $variableName = '',
         public string $submitButtonName = 'Shrani',
+        public string $optionalVariableName = '',
+        public string $optionalId = '',
     )
     {
 
