@@ -84,7 +84,7 @@ Route::group(['middleware' => 'tch'], function () {
             Route::get('/list', [MaterialsController::class, 'listSubjects'])->name('subject_material.list');
 
             Route::prefix('/{subjectId}')->group(function () {
-                Route::get('/list', [MaterialsController::class, 'list'])->name('material.list');
+                Route::get('/list', [MaterialsController::class, 'list'])->name('classroom.list');
 
                 /**
                  * Routes for manipulating assignments and downloading submissions
