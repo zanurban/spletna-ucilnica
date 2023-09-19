@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Middleware\EncryptCookies;
+use App\Models\Assignment;
 use App\Models\Material;
 use App\Models\Subject;
 use App\Models\SubjectTeacher;
@@ -32,6 +33,7 @@ class MaterialsController extends Controller
             'title' => $subjectId->subject_name,
             'subjectId' => $subjectId->id,
             'materials' => Material::where('subject_teacher_id', $subject_teacher_id)->get(),
+            'assignments' => Assignment::where('subject_teacher_id', $subject_teacher_id)->get(),
         ]);
     }
 
