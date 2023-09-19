@@ -30,7 +30,7 @@
             <x-input
                 name="completion_date"
                 displayedName="Datum oddaje"
-                type="date"
+                type="datetime-local"
                 value="{{ $formData?->completion_date }}"
             ></x-input>
 

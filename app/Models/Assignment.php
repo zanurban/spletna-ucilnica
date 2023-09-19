@@ -36,6 +36,7 @@ class Assignment extends Model
         'assignment_title',
         'assignment_description',
         'completion_date',
+        'material_file_path',
     ];
 
     /**

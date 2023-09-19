@@ -8,7 +8,7 @@
             @if(count($subjects) > 0)
                 @foreach($subjects as $subject)
                     <li>
-                        <a href="{{ route('material.list', ['subjectId' => $subject->id]) }}">{{ $subject->subject_name }}</a>
+                        <a href="{{ route('classroom.list', ['subjectId' => $subject->id]) }}">{{ $subject->subject_name }}</a>
                     </li>
                 @endforeach
             @endif

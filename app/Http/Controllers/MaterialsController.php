@@ -69,10 +69,10 @@ class MaterialsController extends Controller
             $material->material_file_path = $path;
             $material->save();
 
-            return redirect()->route('material.list', ['subjectId' => $subjectId->id])->with('message', 'Gradivo je bilo uspešno shranjeno!');
+            return redirect()->route('classroom.list', ['subjectId' => $subjectId->id])->with('message', 'Gradivo je bilo uspešno shranjeno!');
         }
 
-        return redirect()->route('material.list', ['subjectId' => $subjectId->id])->with('message', 'Med shranjevanje gradiva se je zgodila napaka!');
+        return redirect()->route('classroom.list', ['subjectId' => $subjectId->id])->with('message', 'Med shranjevanje gradiva se je zgodila napaka!');
     }
 
     public function update(Request $request, Subject $subjectId, Material $materialId)
@@ -94,16 +94,16 @@ class MaterialsController extends Controller
                 'material_file_path' => $path,
             ]);
 
-            return redirect()->route('material.list', ['subjectId' => $subjectId->id])->with('message', 'Gradivo je bilo uspešno shranjeno!');
+            return redirect()->route('classroom.list', ['subjectId' => $subjectId->id])->with('message', 'Gradivo je bilo uspešno shranjeno!');
         }
 
-        return redirect()->route('material.list', ['subjectId' => $subjectId->id])->with('message', 'Gradivo je bil uspešno urejeno!');
+        return redirect()->route('classroom.list', ['subjectId' => $subjectId->id])->with('message', 'Gradivo je bil uspešno urejeno!');
     }
 
     public function delete(Request $request, Subject $subjectId, Material $materialId)
     {
         $materialId->delete();
 
-        return redirect()->route('material.list', ['subjectId' => $subjectId->id])->with('message', 'Gradivo je bilo uspešno izbrisano!');
+        return redirect()->route('classroom.list', ['subjectId' => $subjectId->id])->with('message', 'Gradivo je bilo uspešno izbrisano!');
     }
 }
