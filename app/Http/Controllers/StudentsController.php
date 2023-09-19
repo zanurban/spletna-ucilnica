@@ -28,7 +28,6 @@ class StudentsController extends Controller
                 'email' => $group[0]->email,
                 'username' => $group[0]->username,
                 'role' => $group[0]->role,
-                // ... any other user fields you need
                 'subjects' => $group->pluck('subject_name')->filter()->all(),
             ];
         });
