@@ -36,7 +36,9 @@
             padding-top: auto;
             padding-bottom: auto;
         }
-
+        #navbarNav{
+            height:60px;
+        }
 
         .sidebar a {
 
