@@ -43,14 +43,27 @@
                     </ul>
                 </div>
                 @elseif(Auth::user() && Auth::user()->role == 'usr')
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="{{ route('subject.list') }}">Predmeti</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Moj Profil</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('logout') }}">Odjava</a>
+                        </li>
+                    </ul>
+                </div>
                 @else
-                    <div class="collapse navbar-collapse" id="navbarNav">
-                        <ul class="navbar-nav ml-auto">
-                            {{-- <li class="nav-item active" style="margin-right: 10px;">
-                                <a class="nav-link" href="{{ route('login') }}">Prijava</a>
-                            </li> --}}
-                        </ul>
-                    </div>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ml-auto">
+                        {{-- <li class="nav-item active">
+                            <a class="nav-link" href="{{ route('subject_material.list') }}">Predmeti</a>
+                        </li> --}}
+                    </ul>
+                </div>
                 @endif
             </div>
         </nav>

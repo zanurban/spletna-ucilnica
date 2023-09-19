@@ -134,13 +134,15 @@ Route::group(['middleware' => 'usr'], function () {
          * Routes for accessing subject and submitting assignments
          */
         Route::prefix('/subject')->group(function () {
-            Route::get('/{subjectId}', [StudentsSubjectController::class, 'showForm'])->name('subject.display');
-
-            Route::prefix('/{subjectId}/assignment')->group(function () {
-                Route::get('/{assignmentId}', [AssignmentSubmissionController::class, 'showAssigment'])->name('assigment.show');
-                Route::post('/{assignmentId}', [AssignmentSubmissionController::class, 'submit'])->name('assigment.submit');
-                Route::put('/{assignmentId}', [AssignmentSubmissionController::class, 'resubmit'])->name('assigment.resubmit');
-                Route::delete('/delete/{assignmentId}', [AssignmentSubmissionController::class, 'delete'])->name('assigment.delete');
+            Route::get('/list', [StudentsSubjectController::class, 'list'])->name('subject.list');
+            Route::prefix('/{subjectId}')->group(function () {
+                Route::get('/show', [StudentsSubjectController::class, 'listMaterials'])->name('material.list');
+                Route::prefix('/assignment')->group(function () {
+                    Route::get('/{assignmentId}', [AssignmentSubmissionController::class, 'showAssigment'])->name('assigment.show');
+                    Route::post('/{assignmentId}', [AssignmentSubmissionController::class, 'submit'])->name('assigment.submit');
+                    Route::put('/{assignmentId}', [AssignmentSubmissionController::class, 'resubmit'])->name('assigment.resubmit');
+                    Route::delete('/delete/{assignmentId}', [AssignmentSubmissionController::class, 'delete'])->name('assigment.delete');
+                });
             });
         });
     });
