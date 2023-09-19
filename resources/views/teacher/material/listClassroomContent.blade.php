@@ -16,11 +16,13 @@
                 @if(count($materials) > 0)
                     @foreach($materials as $row)
                         <tr>
-                            <td><a href="{{ Storage::url($row->material_file_path) }}">{{ $row->material_title }}</a></td>
+                            <td><a href="{{ Storage::url($row->material_file_path) }}">{{ $row->material_title }}</a>
+                            </td>
                             <td>{{ $row->material_description }}</td>
                             <td>
-                                <form action="{{ route('material.delete', ['subjectId' => $subjectId, 'materialId' => $row?->id]) }}"
-                                      method="POST">
+                                <form
+                                    action="{{ route('material.delete', ['subjectId' => $subjectId, 'materialId' => $row?->id]) }}"
+                                    method="POST">
                                     @method('DELETE')
                                     @csrf
                                     <div class="d-flex gap-2">
@@ -68,18 +70,26 @@
             <table>
                 <tr>
                     <th>Ime naloge</th>
-                    <th>Opis gradiva</th>
+                    <th>Opis naloge</th>
+                    <th>Rok oddaje naloge</th>
+                    <th>Gradivo naloge</th>
                     <th></th>
                 </tr>
 
                 @if(count($assignments) > 0)
                     @foreach($assignments as $row)
                         <tr>
-                            <td><a href="{{ Storage::url($row->material_file_path) }}">{{ $row->material_title }}</a></td>
-                            <td>{{ $row->material_description }}</td>
+                            <td>{{ $row->assignment_title }}</td>
+                            <td>{{ $row->assignment_description }}</td>
+                            <td>{{ $row->completion_date }}</td>
+                            <td>@if($row->material_file_path !== '')
+                                    <a href="{{ Storage::url($row->material_file_path) }}">{{ $row->assignment_title }}</a>
+                                @endif
+                            </td>
                             <td>
-                                <form action="{{ route('assignment.delete', ['subjectId' => $subjectId, 'assignmentId' => $row?->id]) }}"
-                                      method="POST">
+                                <form
+                                    action="{{ route('assignment.delete', ['subjectId' => $subjectId, 'assignmentId' => $row?->id]) }}"
+                                    method="POST">
                                     @method('DELETE')
                                     @csrf
                                     <div class="d-flex gap-2">
