@@ -48,6 +48,9 @@
                             </td>
                         </tr>
                     @endforeach
+                        
+                @else
+                        Bedak
                 @endif
             </table>
             <a href="{{ route('material.create', ['subjectId' => $subjectId]) }}"

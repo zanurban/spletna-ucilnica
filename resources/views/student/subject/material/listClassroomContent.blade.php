@@ -19,12 +19,12 @@
                             <td><a href="{{ Storage::url($row->material_file_path) }}">{{ $row->material_title }}</a></td>
                             <td>{{ $row->material_description }}</td>
                             <td>
-                                <form action="{{ route('material.delete', ['subjectId' => $subjectId, 'materialId' => $row?->id]) }}"
+                                <form action="{{ route('assigment.delete', ['subjectId' => $subjectId, 'materialId' => $row?->id]) }}"
                                       method="POST">
                                     @method('DELETE')
                                     @csrf
                                     <div class="d-flex gap-2">
-                                        <a href="{{ route('material.update', ['subjectId' => $subjectId, 'materialId' => $row?->id]) }}"
+                                        <a href="{{ route('assigment.update', ['subjectId' => $subjectId, 'materialId' => $row?->id]) }}"
                                            class="btn btn-primary btn-sm add">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                                  fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">

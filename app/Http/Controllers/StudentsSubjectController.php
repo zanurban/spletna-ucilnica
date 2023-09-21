@@ -6,7 +6,7 @@ use Auth;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Subject;
-use App\Models\SubjectStudent;
+use App\Models\Material;
 use App\Models\SubjectTeacher;
 use Illuminate\Support\Facades\Hash;
 
@@ -31,6 +31,16 @@ class StudentsSubjectController extends Controller
             'data' => $subjects,
         ]);
 
+    }
+    public function listMaterial(Request $request, Subject $subjectId){
+
+        $subject_teacher_id = SubjectTeacher::where('subject_id', $subjectId->id)->first()->id;
+
+        return view('student.subject.material.listClassroomContent', [
+            'title' => $subjectId->subject_name,
+            'subjectId' => $subjectId->id,
+            'materials' => Material::where('subject_teacher_id', $subject_teacher_id)->get(),
+        ]);
 
     }
 }
