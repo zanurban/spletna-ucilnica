@@ -16,6 +16,7 @@ return new class extends Migration
             $table->uuid('subject_teacher_id');
             $table->string('assignment_title');
             $table->text('assignment_description')->nullable();
+            $table->string('material_file_path')->nullable();
             $table->date('completion_date');
             $table->timestamps();
 
