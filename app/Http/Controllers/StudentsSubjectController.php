@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Subject;
 use App\Models\Material;
+use App\Models\Assignment; 
 use App\Models\SubjectTeacher;
 use Illuminate\Support\Facades\Hash;
 
@@ -36,10 +37,11 @@ class StudentsSubjectController extends Controller
 
         $subject_teacher_id = SubjectTeacher::where('subject_id', $subjectId->id)->first()->id;
 
-        return view('student.subject.material.listClassroomContent', [
+        return view('student.subject.material.listContent', [
             'title' => $subjectId->subject_name,
             'subjectId' => $subjectId->id,
             'materials' => Material::where('subject_teacher_id', $subject_teacher_id)->get(),
+            'assignments' => Assignment::where('subject_teacher_id', $subject_teacher_id)->get(),
         ]);
 
     }

@@ -135,8 +135,10 @@ Route::group(['middleware' => 'usr'], function () {
          */
         Route::prefix('/subject')->group(function () {
             Route::get('/list', [StudentsSubjectController::class, 'list'])->name('subject.list');
+           
             Route::prefix('/{subjectId}')->group(function () {
-                Route::get('/show', [StudentsSubjectController::class, 'listMaterials'])->name('material.list');
+                Route::get('/list', [StudentsSubjectController::class, 'listMaterial'])->name('subject.listMaterial');
+                
                 Route::prefix('/assignment')->group(function () {
                     Route::get('/{assignmentId}', [AssignmentSubmissionController::class, 'showAssigment'])->name('assigment.show');
                     Route::post('/{assignmentId}', [AssignmentSubmissionController::class, 'submit'])->name('assigment.submit');
