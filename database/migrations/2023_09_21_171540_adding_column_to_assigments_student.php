@@ -12,10 +12,9 @@ return new class extends Migration
     public function up()
     {
         Schema::table('assignment_students', function (Blueprint $table) {
-            $table->string('assigment_file_path');  // Assuming you want to add a string column
-        });
-        Schema::table('assignment_students', function (Blueprint $table) {
-            $table->string('assigment_description');  // Assuming you want to add a string column
+            $table->string('assignment_file_path');
+            $table->string('assignment_student_comment');
+
         });
     }
 
@@ -25,7 +24,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('assignment_students', function (Blueprint $table) {
-            //
+            Schema::dropIfExists('assigment_file_path');
+            Schema::dropIfExists('assigment_description');
         });
     }
 };

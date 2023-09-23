@@ -38,7 +38,7 @@ class AssignmentSubmissionController extends Controller
 
         if ($request->hasFile('file')) {
             $file = $request->file('file');
-            $path = $file->store('public/studentAssignments/$assignmentId/$userId');
+            $path = $file->store('public/studentAssignments/'.$assignmentId.'/'.$userId);
 
             $assignment->material_file_path = $path;
             $assignment->save();
@@ -65,7 +65,7 @@ class AssignmentSubmissionController extends Controller
 
         if ($request->hasFile('file')) {
             $file = $request->file('file');
-            $path = $file->store('public/assignments');
+            $path = $file->store('public/studentAssignments/'.$assignmentId.'/'.$userId);
         }
 
         $assignmentId->update([
