@@ -5,32 +5,37 @@
         <h1>Vnesite podatke o gradivu</h1>
         <div class="col-md-12">
             <x-form
-                submitRouteName="subject.list"
-                backRouteName="subject.listMaterial"
-                variableName="materialId"
-                optionalVariableName="subjectId"
+                submitRouteName="assignment_student"
+                backRouteName="subject.list"
+                variableName="subjectId"
+                optionalVariableName="assignmentId"
                 :optionalId="$subjectId"
                 :existingData="$formData"
             >
-            
-                <x-inputRead
+                <x-input
                     name="assigment_title"
                     displayedName="Ime naloge"
                     type="text"
                     value="{{ $formData?->assignment_title }}"
-                ></x-inputRead>
-                <x-inputRead
+                    readonly="true"
+                ></x-input>
+
+                <x-input
                     name="assigment_decription"
                     displayedName="Opis naloge"
                     type="text"
                     value="{{ $formData?->assignment_description }}"
-                ></x-inputRead>
-                <x-inputRead
-                name="assignment_description"
-                displayedName="Rok oddaje naloge"
-                type="text"
-                value="{{ $formData?->completion_date }}"
-                ></x-inputRead>
+                    readonly="true"
+                ></x-input>
+
+                <x-input
+                    name="assignment_description"
+                    displayedName="Rok oddaje naloge"
+                    type="text"
+                    value="{{ $formData?->completion_date }}"
+                    readonly="true"
+                ></x-input>
+
                 <x-input
                     name="assignment_student_comment"
                     displayedName="Opis naloge"
