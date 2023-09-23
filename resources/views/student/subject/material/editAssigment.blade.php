@@ -7,8 +7,8 @@
             <x-form
                 submitRouteName="assignment_student"
                 backRouteName="subject.list"
-                variableName="subjectId"
-                optionalVariableName="assignmentId"
+                variableName="assignmentId"
+                optionalVariableName="subjectId"
                 :optionalId="$subjectId"
                 :existingData="$formData"
             >
@@ -38,7 +38,7 @@
 
                 <x-input
                     name="assignment_student_comment"
-                    displayedName="Opis naloge"
+                    displayedName="Komentar pri oddaji naloge"
                     type="text"
                     value="{{ $formData?->assigment_description }}"
                 ></x-input>

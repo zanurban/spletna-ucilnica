@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\Subject;
 use App\Models\AssignmentStudent;
@@ -21,38 +21,33 @@ class AssignmentSubmissionController extends Controller
         ]);
     }
 
-    public function save(Request $request, Subject $subjectId, AssignmentStudent $assignmentId)
+    public function submit(Request $request, Subject $subjectId, Assignment $assignmentId)
     {
         $validatedData = $request->validate([
-            'assignment_description' => ['max:512'],
-            'completion_date' => ['required', 'date', 'after:today'],
+            'assignment_student_comment' => ['max:512'],
             'file' => [ 'file', 'max:4096', 'required'],
         ]);
-        $userId = User::where('id', Auth::user()->id)->select('id');
+
         $assignment = new AssignmentStudent([
-            'assigment_id' => $assignmentId->id,
-            'assignment_description' => $validatedData['assignment_description'],
-            'completion_date' => $validatedData['completion_date'],
-            'student_id' => (string)$userId,
+            'assignment_id' => $assignmentId->id,
+            'student_id' => Auth::user()?->id,
+            'date_of_submission' => date('Y-m-d H:i:s'),
+            'assignment_student_comment' => $validatedData['assignment_student_comment'] ?? '',
         ]);
 
         if ($request->hasFile('file')) {
             $file = $request->file('file');
-            $path = $file->store('public/studentAssignments/'.$assignmentId.'/'.$userId);
+            $file->store('public/studentAssignments/'. $assignmentId->id . '/'. Auth::user()?->id);
 
-            $assignment->material_file_path = $path;
             $assignment->save();
 
             return redirect()->route('subject.listMaterial', ['subjectId' => $subjectId->id])->with('message', 'Naloga je bilo uspešno shranjena z datoteko!');
         }
 
-        $assignment->material_file_path = '';
-        $assignment->save();
-
-        return redirect()->route('subject.listMaterial', ['subjectId' => $subjectId->id])->with('message', 'Naloga je bila uspešno shranjena brez datoteke!');
+        return redirect()->route('subject.listMaterial', ['subjectId' => $subjectId?->id])->with('message', 'Naloga je bila uspešno shranjena brez datoteke!');
     }
 
-    public function update(Request $request, Subject $subjectId, AssignmentStudent $assignmentId)
+    public function resubmit(Request $request, Subject $subjectId, AssignmentStudent $assignmentId)
     {
         $validatedData = $request->validate([
 
