@@ -140,10 +140,10 @@ Route::group(['middleware' => 'usr'], function () {
                 Route::get('/list', [StudentsSubjectController::class, 'listMaterial'])->name('subject.listMaterial');
 
                 Route::prefix('/assignment')->group(function () {
-                    Route::get('/{assignmentId}', [AssignmentSubmissionController::class, 'showAssigment'])->name('assignment.show');
-                    Route::post('/{assignmentId}', [AssignmentSubmissionController::class, 'submit'])->name('assignment.submit');
-                    Route::put('/{assignmentId}', [AssignmentSubmissionController::class, 'resubmit'])->name('assignment.resubmit');
-                    Route::delete('/delete/{assignmentId}', [AssignmentSubmissionController::class, 'delete'])->name('assignment.delete');
+                    Route::get('/{assignmentId}', [AssignmentSubmissionController::class, 'showAssigment'])->name('assignment_student.show');
+                    Route::post('/{assignmentId}', [AssignmentSubmissionController::class, 'submit'])->name('assignment_student.update');
+                    Route::put('/{assignmentId}', [AssignmentSubmissionController::class, 'resubmit'])->name('assignment_student.update');
+                    Route::delete('/delete/{assignmentId}', [AssignmentSubmissionController::class, 'delete'])->name('assignment_student.delete');
                 });
             });
         });
