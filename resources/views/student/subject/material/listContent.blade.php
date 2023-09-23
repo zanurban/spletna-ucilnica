@@ -49,7 +49,7 @@
                             </td>
                             <td>
                                 <div class="d-flex gap-2">
-                                    <a href="{{ route('assignment.show', ['subjectId' => $subjectId, 'assignmentId' => $row?->id]) }}"
+                                    <a href="{{ route('assignment_student.show', ['subjectId' => $subjectId, 'assignmentId' => $row?->id]) }}"
                                        class="btn btn-primary btn-sm add">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                              fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
