@@ -33,12 +33,14 @@
                     <th>Opis naloge</th>
                     <th>Rok oddaje naloge</th>
                     <th>Gradivo naloge</th>
+                    <th>Oddano gradivo</th>
+                    <th>Komentar oddaje</th>
                     <th></th>
                 </tr>
 
                 @if (count($assignments) > 0)
                     @foreach ($assignments as $row)
-                        <tr>
+                        <tr @if($row->date_of_submission) style="background-color: lightgreen" @endif>
                             <td>{{ $row?->assignment_title }}</td>
                             <td>{{ $row?->assignment_description }}</td>
                             <td>{{ $row?->completion_date }}</td>
@@ -47,6 +49,11 @@
                                     <a href="{{ Storage::url($row?->material_file_path) }}">{{ $row?->assignment_title }}</a>
                                 @endif
                             </td>
+
+                            @php($files = \Illuminate\Support\Facades\Storage::files('public/studentAssignments/'. $row?->id . '/'. Auth::user()?->id))
+                            <td>@if(!empty($files)) <a href="{{ Storage::url($files[0]) }}">Oddana datoteka</a> @endif</td>
+                            
+                            <td>{{ $row->assignment_student_comment }}</td>
                             <td>
                                 <div class="d-flex gap-2">
                                     <a href="{{ route('assignment_student.show', ['subjectId' => $subjectId, 'assignmentId' => $row?->id]) }}"
