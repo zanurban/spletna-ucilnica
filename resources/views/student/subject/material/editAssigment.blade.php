@@ -40,7 +40,7 @@
                     name="assignment_student_comment"
                     displayedName="Komentar pri oddaji naloge"
                     type="text"
-                    value="{{ $formData?->assigment_description }}"
+                    value="{{ $formData?->assignment_student_comment }}"
                 ></x-input>
 
                 <input type="file" name="file">

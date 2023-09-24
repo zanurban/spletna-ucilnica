@@ -14,16 +14,30 @@ class AssignmentSubmissionController extends Controller
 {
     public function showAssigment(Request $request, Subject $subjectId, Assignment $assignmentId)
     {
+        $formData = Assignment::select('assignments.id AS id', 'assignment_description', 'assignments.subject_teacher_id', 'assignments.assignment_title', 'assignments.completion_date', 'assignments.material_file_path', 'assignment_students.id AS assignment_student_id', 'assignment_students.assignment_id', 'assignment_students.student_id', 'assignment_students.date_of_submission', 'assignment_students.assignment_student_comment')
+            ->leftJoin('assignment_students', 'assignments.id', '=', 'assignment_students.assignment_id')
+            ->where('assignment_students.assignment_id', '=', $assignmentId->id)
+            ->get()
+            ->first();
+
+        if ($formData === null) {
+            $formData = $assignmentId;
+        }
+
         return view('student.subject.material.editAssigment', [
             'title' => 'Urejanje naloge',
             'subjectId' => $subjectId->id,
-            'formData' => $assignmentId,
+            'formData' => $formData,
         ]);
     }
 
     public function submit(Request $request, Subject $subjectId, Assignment $assignmentId)
     {
         date_default_timezone_set('Europe/Ljubljana');
+
+        if(sizeof(Storage::files('public/studentAssignments/'. $assignmentId?->id . '/'. Auth::user()?->id)) !== 0){
+            return $this->resubmit($request, $subjectId, $assignmentId);
+        }
 
         $validatedData = $request->validate([
             'assignment_student_comment' => ['max:512'],
@@ -51,36 +65,47 @@ class AssignmentSubmissionController extends Controller
         return redirect()->route('subject.listMaterial', ['subjectId' => $subjectId?->id])->with('message', 'Naloga je bila uspešno shranjena brez datoteke!');
     }
 
-    public function resubmit(Request $request, Subject $subjectId, AssignmentStudent $assignmentId)
+    public function resubmit(Request $request, Subject $subjectId, Assignment $assignmentId)
     {
-        $validatedData = $request->validate([
+        $assignment_student = AssignmentStudent::where('assignment_id', '=', $assignmentId->id)
+            ->where('student_id', '=', Auth::user()?->id)
+            ->get()
+            ->first();
 
-            'assignment_description' => ['max:512'],
-            'completion_date' => ['required', 'date', 'after:today'],
-            'file' => [ 'file', 'max:4096'],
+        $validatedData = $request->validate([
+            'assignment_student_comment' => ['max:512'],
+            'file' => [ 'file', 'max:4096', 'required'],
         ]);
 
-        Storage::delete($assignmentId->material_file_path);
+        $filepath = 'public/studentAssignments/'. $assignmentId->id . '/'. Auth::user()?->id . '/';
+        Storage::delete(Storage::files($filepath));
 
         if ($request->hasFile('file')) {
             $file = $request->file('file');
-            $path = $file->store('public/studentAssignments/'.$assignmentId.'/'.$userId);
+            $filename = Auth::user()?->last_name. ' ' . Auth::user()?->first_name . ' - ' . $assignmentId->assignment_title . '.' . pathinfo($file->getClientOriginalName(), PATHINFO_EXTENSION);
+            $file->storeAs($filepath, $filename);
         }
 
-        $assignmentId->update([
-            'assignment_title' => $validatedData['assignment_title'],
-            'assignment_description' => $validatedData['assignment_description'],
-            'completion_date' => $validatedData['completion_date'],
-            'material_file_path' => $path ?? '',
+        $assignment_student->update([
+            'assignment_student_comment' => $validatedData['assignment_student_comment'],
+            'date_of_submission' => date('Y-m-d H:i:s', time()),
         ]);
 
-        return redirect()->route('subject.listMaterial', ['subjectId' => $subjectId->id])->with('message', 'Naloga je bil uspešno urejena!');
+        return redirect()->route('subject.listMaterial', ['subjectId' => $subjectId->id])->with('message', 'Naloga je bila uspešno ponovno oddana!');
     }
 
-    public function delete(Request $request, Subject $subjectId, AssignmentStudent $assignmentId)
+    public function delete(Request $request, Subject $subjectId, Assignment $assignmentId)
     {
-        $assignmentId->delete();
+        $assignment_student = AssignmentStudent::where('assignment_id', '=', $assignmentId->id)
+            ->where('student_id', '=', Auth::user()?->id)
+            ->get()
+            ->first();
 
-        return redirect()->route('subject.listMaterial', ['subjectId' => $subjectId->id])->with('message', 'Naloga je bila uspešno izbrisana!');
+        $filepath = 'public/studentAssignments/'. $assignmentId->id . '/'. Auth::user()?->id . '/';
+        Storage::delete(Storage::files($filepath));
+
+        $assignment_student->delete();
+
+        return redirect()->route('subject.listMaterial', ['subjectId' => $subjectId->id])->with('message', 'Oddaja je bila uspešno izbrisana!');
     }
 }
