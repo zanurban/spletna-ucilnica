@@ -23,6 +23,8 @@ class AssignmentSubmissionController extends Controller
 
     public function submit(Request $request, Subject $subjectId, Assignment $assignmentId)
     {
+        date_default_timezone_set('Europe/Ljubljana');
+
         $validatedData = $request->validate([
             'assignment_student_comment' => ['max:512'],
             'file' => [ 'file', 'max:4096', 'required'],
@@ -31,13 +33,15 @@ class AssignmentSubmissionController extends Controller
         $assignment = new AssignmentStudent([
             'assignment_id' => $assignmentId->id,
             'student_id' => Auth::user()?->id,
-            'date_of_submission' => date('Y-m-d H:i:s'),
+            'date_of_submission' => date('Y-m-d H:i:s', time()),
             'assignment_student_comment' => $validatedData['assignment_student_comment'] ?? '',
         ]);
 
         if ($request->hasFile('file')) {
             $file = $request->file('file');
-            $file->store('public/studentAssignments/'. $assignmentId->id . '/'. Auth::user()?->id);
+            $filepath = 'public/studentAssignments/'. $assignmentId->id . '/'. Auth::user()?->id . '/';
+            $filename = Auth::user()?->last_name. ' ' . Auth::user()?->first_name . ' - ' . $assignmentId->assignment_title . '.' . pathinfo($file->getClientOriginalName(), PATHINFO_EXTENSION);
+            $file->storeAs($filepath, $filename);
 
             $assignment->save();
 
