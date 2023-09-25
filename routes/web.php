@@ -23,6 +23,9 @@ Route::group(['middleware' => 'login'], function () {
      */
     Route::get('/login', [LoginController::class, 'showForm'])->name('login');
     Route::post('/login', [LoginController::class, 'login'])->name('login.create');
+
+    Route::get('/register', [LoginController::class, 'showFormRegister'])->name('register');
+    Route::post('/register', [LoginController::class, 'register'])->name('register.create');
 });
 
 Route::group(['middleware' => 'admin'], function () {
@@ -145,6 +148,11 @@ Route::group(['middleware' => 'usr'], function () {
                     Route::delete('/delete/{assignmentId}', [AssignmentSubmissionController::class, 'delete'])->name('assignment_student.delete');
                 });
             });
+        });
+        Route::prefix('/subject_classrooms')->group(function () {
+            Route::get('/list', [StudentsSubjectController::class, 'listClasses'])->name('subject_classrooms.list');
+            Route::post('/list', [StudentsSubjectController::class, 'joinSubject'])->name('subject_classrooms.list.update');
+            Route::delete('/list', [StudentsSubjectController::class, 'showForm'])->name('subject_classrooms.list.delete');
         });
     });
 });

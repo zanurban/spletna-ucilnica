@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\SubjectStudent;
 use Auth;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -61,4 +62,35 @@ class StudentsSubjectController extends Controller
         ]);
 
     }
+    public function listClasses(){
+        $subjects=Subject::leftJoin('subject_teachers', 'subjects.id', '=', 'subject_teachers.subject_id')
+            ->leftJoin('users', 'subject_teachers.teacher_id', '=', 'users.id')
+            ->select('subjects.subject_name', 'subjects.id as subject_id', 'users.first_name as teacher_first_name', 'users.last_name as teacher_last_name')
+            ->get();
+        $subjects_joined = User::where('users.id', Auth::user()->id)
+            ->leftJoin('subject_students', 'users.id', '=', 'subject_students.student_id')
+            ->leftJoin('subject_teachers', 'subject_students.subject_teacher_id', '=', 'subject_teachers.id')
+            ->leftJoin('subjects', 'subject_teachers.subject_id', '=', 'subjects.id')
+            ->leftJoin('users as teachers', 'subject_teachers.teacher_id', '=', 'teachers.id')
+            ->select('subjects.id as subject_id')
+            ->get()
+            ->filter(function ($item) {
+                return $item->subject_name !== null && $item->subject_id !== null;
+            });
+            return view('student.subjects.listSubjects', [
+                'title' => 'Prikaz predmetov',
+                'data' => $subjects,
+                'data_joined' => $subjects_joined->pluck('subject_id')->toArray(),
+            ]);
+    }
+    public function joinSubject(Request $request, $subjectId){
+        dd($subjectId);
+        $subjectTeacher = SubjectTeacher::where('subject_id', $subjectId)->get();
+        dd($subjectTeacher);
+        SubjectStudent::create([
+            'student_id' => Auth::user()->id,
+            'subject_teacher_id' => $subjectTeacher->id,
+        ]);
+    }
+    
 }

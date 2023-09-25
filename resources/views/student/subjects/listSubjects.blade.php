@@ -1,0 +1,69 @@
+@extends('layout')
+
+@section('content')
+    <div class="box">
+        <h1>Obstoječi učenci</h1>
+
+        <div class="col-md-12 table">
+            <table>
+                <tr>
+                    <th>Ime predmeta</th>
+                    <th>Podatki učitelja</th>
+                    <th></th>
+                </tr>
+
+                @if (count($data) > 0)
+                    @foreach ($data as $row)
+                        <tr>
+                            <td>{{ $row['subject_name'] }}</td>
+                            <td>{{ $row['teacher_first_name'] }} {{ $row['teacher_last_name'] }}</td>
+                            <td>
+                                @if (in_array($row['subject_id'], $data_joined))
+                                    <form action="{{ route('subject_classrooms.list.delete', ['subjectId' => $row['subject_id']]) }}"
+                                        method="POST">
+                                        @method('DELETE')
+                                        @csrf
+                                        <div class="d-flex gap-2">
+                                            <button type="submit" class="btn btn-outline-danger btn-sm"
+                                                onclick="return confirm('Ali ste preričani, da želite izbrisati ta element?');">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                    fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1H13.494a.58.58 0 0 0-.01 0H11ZM4.115 15 3.31 4.5H12.69l-.805 10.5H4.115Zm5.384-9H6.5v1h2.999v-1ZM6.5 7h2.999v1H6.5V7ZM6.5 9h2.999v1H6.5V9Z" />
+                                                </svg>
+                                                Odjava
+                                            </button>
+                                        </div>
+                                    </form>
+                                @else
+                                    <form
+                                        action="{{ route('subject_classrooms.list.update', ['subjectId' => $row['subject_id']]) }}"
+                                        method="POST">
+                                        @method('POST')
+                                        @csrf
+                                        <div class="d-flex gap-2">
+                                            <button type="submit" class="btn btn-outline-danger btn-sm"
+                                                onclick="return confirm('Ali ste preričani, da želite prijaviti na predmet?');">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                    fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1H13.494a.58.58 0 0 0-.01 0H11ZM4.115 15 3.31 4.5H12.69l-.805 10.5H4.115Zm5.384-9H6.5v1h2.999v-1ZM6.5 7h2.999v1H6.5V7ZM6.5 9h2.999v1H6.5V9Z" />
+                                                </svg>
+                                               Prijava
+                                            </button>
+                                        </div>
+                                    </form>
+                                @endif
+
+                            </td>
+                        </tr>
+                    @endforeach
+                @else
+                    <tr>
+                        <td colspan="5" class="text-center">No Data Found</td>
+                    </tr>
+                @endif
+            </table>
+        </div>
+    </div>
+@endsection
