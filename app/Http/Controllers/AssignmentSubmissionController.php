@@ -35,6 +35,11 @@ class AssignmentSubmissionController extends Controller
     {
         date_default_timezone_set('Europe/Ljubljana');
 
+        /*
+         * Because of form component usage every time we submit a form it gets sent as PUT request
+         * which in some cases is not correct, so by checking if file submission dir already exists
+         * we will treat it as PUT and thus call method for resubmission of assignment
+         */
         if(sizeof(Storage::files('public/studentAssignments/'. $assignmentId?->id . '/'. Auth::user()?->id)) !== 0){
             return $this->resubmit($request, $subjectId, $assignmentId);
         }
