@@ -96,8 +96,8 @@ Route::group(['middleware' => 'tch'], function () {
                     Route::put('/edit/{assignmentId}', [AssignmentsController::class, 'update'])->name('assignment.update');
                     Route::delete('/delete/{assignmentId}', [AssignmentsController::class, 'delete'])->name('assignment.delete');
 
-                    Route::get('/download', [AssignmentsController::class, 'downloadAllSubmissions'])->name('assignment.downloadAll');
-                    Route::get('/download/{studentId}', [AssignmentsController::class, 'downloadStudentsSubmission'])->name('assignment.downloadSpecific');
+                    Route::get('/download/{assignmentId}', [AssignmentsController::class, 'downloadAllAssignmentSubmissions'])->name('assignment.downloadAll');
+                    Route::get('/download/{assignmentId}/{studentId}', [AssignmentsController::class, 'downloadStudentsSubmission'])->name('assignment.downloadSpecific');
                 });
 
                 Route::prefix('/material')->group(function () {
