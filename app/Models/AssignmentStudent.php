@@ -35,6 +35,7 @@ class AssignmentStudent extends Model
         'assignment_id',
         'student_id',
         'date_of_submission',
+        'assignment_student_comment',
     ];
 
     /**

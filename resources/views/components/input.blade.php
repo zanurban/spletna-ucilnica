@@ -3,7 +3,9 @@
     <input type="{{ $type }}"
            class="form-control {{ isset($errorMessaage) ? 'is-invalid' : '' }}"
            name="{{ $name }}"
-           value="{{ old($name, $value) }}">
+           value="{{ old($name, $value) }}"
+            {{ $readonly ? 'readonly' : ''}}
+    >
 
     @error($name)
         <div class="alert alert-danger auto-dismiss">{{ $message }}</div>
