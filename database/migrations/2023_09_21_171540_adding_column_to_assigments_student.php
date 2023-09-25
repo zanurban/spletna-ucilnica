@@ -23,6 +23,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-
+        Schema::table('assignment_students', function (Blueprint $table) {
+            $table->dropColumn('assignment_student_comment');
+            $table->datetime('date_of_submission')->nullable();
+        });
     }
 };

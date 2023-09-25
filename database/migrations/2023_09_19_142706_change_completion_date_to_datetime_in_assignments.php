@@ -15,7 +15,7 @@ return new class extends Migration {
     public function down()
     {
         Schema::table('assignments', function (Blueprint $table) {
+            $table->datetime('completion_date')->change();
         });
     }
-
 };
