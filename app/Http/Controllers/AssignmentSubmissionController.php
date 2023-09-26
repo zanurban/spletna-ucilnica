@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\SubjectTeacher;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\Subject;
@@ -12,7 +13,7 @@ use App\Models\User;
 
 class AssignmentSubmissionController extends Controller
 {
-    public function showAssigment(Request $request, Subject $subjectId, Assignment $assignmentId)
+    public function showAssigment(Request $request, SubjectTeacher $subjectTeacherId, Assignment $assignmentId)
     {
         $formData = Assignment::select('assignments.id AS id', 'assignment_description', 'assignments.subject_teacher_id', 'assignments.assignment_title', 'assignments.completion_date', 'assignments.material_file_path', 'assignment_students.id AS assignment_student_id', 'assignment_students.assignment_id', 'assignment_students.student_id', 'assignment_students.date_of_submission', 'assignment_students.assignment_student_comment')
             ->leftJoin('assignment_students', 'assignments.id', '=', 'assignment_students.assignment_id')
@@ -26,12 +27,12 @@ class AssignmentSubmissionController extends Controller
 
         return view('student.subject.material.editAssigment', [
             'title' => 'Urejanje naloge',
-            'subjectId' => $subjectId->id,
+            'subjectTeacherId' => $subjectTeacherId->id,
             'formData' => $formData,
         ]);
     }
 
-    public function submit(Request $request, Subject $subjectId, Assignment $assignmentId)
+    public function submit(Request $request, SubjectTeacher $subjectTeacherId, Assignment $assignmentId)
     {
         date_default_timezone_set('Europe/Ljubljana');
 
@@ -41,7 +42,7 @@ class AssignmentSubmissionController extends Controller
          * we will treat it as PUT and thus call method for resubmission of assignment
          */
         if(sizeof(Storage::files('public/studentAssignments/'. $assignmentId?->id . '/'. Auth::user()?->id)) !== 0){
-            return $this->resubmit($request, $subjectId, $assignmentId);
+            return $this->resubmit($request, $subjectTeacherId, $assignmentId);
         }
 
         $validatedData = $request->validate([
@@ -64,13 +65,13 @@ class AssignmentSubmissionController extends Controller
 
             $assignment->save();
 
-            return redirect()->route('subject.listMaterial', ['subjectId' => $subjectId->id])->with('message', 'Naloga je bilo uspešno shranjena z datoteko!');
+            return redirect()->route('subject.listMaterial', ['subjectTeacherId' => $subjectTeacherId->id])->with('message', 'Naloga je bilo uspešno shranjena z datoteko!');
         }
 
-        return redirect()->route('subject.listMaterial', ['subjectId' => $subjectId?->id])->with('message', 'Naloga je bila uspešno shranjena brez datoteke!');
+        return redirect()->route('subject.listMaterial', ['subjectTeacherId' => $subjectTeacherId?->id])->with('message', 'Naloga je bila uspešno shranjena brez datoteke!');
     }
 
-    public function resubmit(Request $request, Subject $subjectId, Assignment $assignmentId)
+    public function resubmit(Request $request, SubjectTeacher $subjectTeacherId, Assignment $assignmentId)
     {
         $assignment_student = AssignmentStudent::where('assignment_id', '=', $assignmentId->id)
             ->where('student_id', '=', Auth::user()?->id)
@@ -96,10 +97,10 @@ class AssignmentSubmissionController extends Controller
             'date_of_submission' => date('Y-m-d H:i:s', time()),
         ]);
 
-        return redirect()->route('subject.listMaterial', ['subjectId' => $subjectId->id])->with('message', 'Naloga je bila uspešno ponovno oddana!');
+        return redirect()->route('subject.listMaterial', ['subjectTeacherId' => $subjectTeacherId->id])->with('message', 'Naloga je bila uspešno ponovno oddana!');
     }
 
-    public function delete(Request $request, Subject $subjectId, Assignment $assignmentId)
+    public function delete(Request $request, SubjectTeacher $subjectTeacherId, Assignment $assignmentId)
     {
         $assignment_student = AssignmentStudent::where('assignment_id', '=', $assignmentId->id)
             ->where('student_id', '=', Auth::user()?->id)
@@ -111,6 +112,6 @@ class AssignmentSubmissionController extends Controller
 
         $assignment_student->delete();
 
-        return redirect()->route('subject.listMaterial', ['subjectId' => $subjectId->id])->with('message', 'Oddaja je bila uspešno izbrisana!');
+        return redirect()->route('subject.listMaterial', ['subjectTeacherId' => $subjectTeacherId->id])->with('message', 'Oddaja je bila uspešno izbrisana!');
     }
 }

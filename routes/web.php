@@ -136,7 +136,7 @@ Route::group(['middleware' => 'usr'], function () {
         Route::prefix('/subject')->group(function () {
             Route::get('/list', [StudentsSubjectController::class, 'list'])->name('subject.list');
 
-            Route::prefix('/{subjectId}')->group(function () {
+            Route::prefix('/{subjectTeacherId}')->group(function () {
                 Route::get('/list', [StudentsSubjectController::class, 'listMaterial'])->name('subject.listMaterial');
 
                 Route::prefix('/assignment')->group(function () {
