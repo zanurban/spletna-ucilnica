@@ -61,16 +61,16 @@ class LoginController extends Controller
                 'password' => 'Gesli se ne ujemata.',
             ])->onlyInput('password');
         }
-        else{
             $user = new User();
             $user->username = $credentials['username'];
             $user->password = Hash::make($credentials['password']);
             $user->email = $credentials['email'];
             $user->first_name = $credentials['first_name'];
             $user->last_name = $credentials['last_name'];
+
             $user->save();
+            
             return redirect()->route('login');
-        }
     }
 
     public function logout(Request $request)
