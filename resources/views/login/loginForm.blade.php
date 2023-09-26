@@ -6,7 +6,7 @@
         <div class="col-md-12">
             <x-form
                 submitRouteName="login"
-                backRouteName="home"
+                backRouteName="login"
                 submitButtonName="Prijavi se"
                 :existingData="$formData"
             >
