@@ -127,8 +127,6 @@ Route::group(['middleware' => 'usr'], function () {
         Route::prefix('/profile')->group(function () {
             Route::get('/edit', [ProfileController::class, 'showForm'])->name('profile.update');
             Route::put('/edit', [ProfileController::class, 'update'])->name('profile.update');
-            //Route::delete('/delete/{studentId}', [ProfileController::class, 'delete'])->name('profile.delete');
-            //TODO: check if deletion of profile is possible
         });
 
         /**
