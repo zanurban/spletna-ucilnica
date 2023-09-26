@@ -131,7 +131,7 @@
                 </svg>
                 Dodaj nalogo</a>
         </div>
-
+        <a href="{{ route('subject_material.list') }}" class="btn btn-outline-secondary btn-sm">Nazaj</a>
         @if (session('message'))
             <div class="alert alert-success auto-dismiss">
                 {{ session('message') }}

@@ -77,7 +77,7 @@ class StudentsSubjectController extends Controller
             ->get();
 
         return view('student.subjects.listSubjects', [
-            'title' => 'Prikaz predmetov',
+            'title' => 'Prijava na predmet',
             'data' => $subjects,
             'data_joined' => $subjects_joined->pluck('subject_id')->toArray(),
         ]);

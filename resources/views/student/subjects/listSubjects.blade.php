@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="box">
-        <h1>Obstoječi učenci</h1>
+        <h1>Vpis v predmete</h1>
 
         <div class="col-md-12 table">
             <table>
