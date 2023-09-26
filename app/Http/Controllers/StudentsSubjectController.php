@@ -37,103 +37,37 @@ class StudentsSubjectController extends Controller
     {
         $subject_teacher_id = SubjectTeacher::where('subject_id', $subjectId->id)->first()->id;
 
-        $assignments = Assignment::where('subject_teacher_id', $subject_teacher_id)->get();
+        $userId = Auth::user()->id;
 
-        /*$assignments = Assignment::leftJoin('assignment_students', 'assignments.id', '=', 'assignment_students.assignment_id')
-            ->where('subject_teacher_id', '=', $subject_teacher_id)
-            ->select([
+        $firstTable = DB::table('subject_students')
+            ->join('subject_teachers', 'subject_students.subject_teacher_id', '=', 'subject_teachers.id')
+            ->join('assignments', 'subject_teachers.id', '=', 'assignments.subject_teacher_id')
+            ->select(
                 'assignments.id',
                 'assignments.subject_teacher_id',
                 'assignments.assignment_title',
+                'assignments.assignment_description',
                 'assignments.completion_date',
-                'assignments.material_file_path',
-                'assignment_students.id AS assignment_student_id',
-                'assignment_students.assignment_id',
-                'assignment_students.student_id',
-                'assignment_students.date_of_submission',
-                'assignment_students.assignment_student_comment',
-            ])
-            ->get();*/
+                'assignments.material_file_path'
+            )
+            ->where('subject_students.student_id', $userId)
+            ->where('subject_teachers.id', $subject_teacher_id);
 
-        $userId = Auth::user()->id;
-
-        /*$assignments = DB::table('assignment_students')
-            ->rightJoin(DB::raw('(
-        SELECT
-            assignments.id,
-            assignments.subject_teacher_id,
-            assignments.assignment_title,
-            assignments.assignment_description,
-            assignments.completion_date,
-            assignments.material_file_path
-        FROM subject_students
-        INNER JOIN subject_teachers ON subject_students.subject_teacher_id = subject_teachers.id
-        INNER JOIN assignments ON subject_teachers.id = assignments.subject_teacher_id
-        WHERE subject_students.student_id = ?
-        AND subject_teachers.id = ?
-    ) subQuery'), 'assignment_students.assignment_id', '=', 'subQuery.id')
-            ->where(function ($query) use ($userId) {
-                $query->where('assignment_students.student_id', '=', $userId)
-                    ->orWhereNull('assignment_students.student_id');
+        $assignments = DB::table('assignment_students')
+            ->rightJoinSub($firstTable, 'subQuery', function ($join) {
+                $join->on('assignment_students.assignment_id', '=', 'subQuery.id');
             })
-            ->select('assignment_students.*')
+            ->select('*')
+            ->where('assignment_students.student_id', $userId)
+            ->orWhereNull('assignment_students.student_id')
             ->distinct()
             ->get();
-
 
         return view('student.subject.material.listContent', [
             'title' => $subjectId->subject_name,
             'subjectId' => $subjectId->id,
             'materials' => Material::where('subject_teacher_id', $subject_teacher_id)->get(),
             'assignments' => $assignments,
-        ]);*/
-
-        /*$sql = "SELECT DISTINCT *
-FROM assignment_students as as2
-RIGHT JOIN (
-    SELECT
-        assignments.id,
-        assignments.subject_teacher_id,
-        assignments.assignment_title,
-        assignments.assignment_description,
-        assignments.completion_date,
-        assignments.material_file_path
-    FROM subject_students
-    INNER JOIN subject_teachers ON subject_students.subject_teacher_id = subject_teachers.id
-    INNER JOIN assignments ON subject_teachers.id = assignments.subject_teacher_id
-    WHERE subject_students.student_id = :userId
-    AND subject_teachers.id = :subjectTeacherId
-) as subQuery
-ON as2.assignment_id = subQuery.id
-WHERE as2.student_id = :userId
-OR as2.student_id IS NULL";
-
-        $results = DB::select($sql, [
-            'userId' => $userId,
-            'subjectTeacherId' => $subject_teacher_id,
-        ],
-        true);
-        */
-
-        $results = DB::table('assignment_students')
-            ->rightJoin(DB::raw('(
-            SELECT
-                assignments.id,
-                assignments.subject_teacher_id,
-                assignments.assignment_title,
-                assignments.assignment_description,
-                assignments.completion_date,
-                assignments.material_file_path FROM subject_students'), function ($join){
-                    $join->on('subject_students.subject_teacher_id', '=', 'subject_teacher_id')
-                        ->where('subject_students.student_id', '=', Auth::user()->id);
-                }), 'assignment_students.assignment_id', '=', 'subQuery.id')
-            })
-                });
-
-        dd($results);
-
-
-
-
+        ]);
     }
 }
