@@ -133,10 +133,10 @@ Route::group(['middleware' => 'usr'], function () {
          * Routes for accessing subject and submitting assignments
          */
         Route::prefix('/subject')->group(function () {
-            Route::get('/list', [StudentsSubjectController::class, 'list'])->name('subject.list');
+            Route::get('/list', [StudentsSubjectController::class, 'list'])->name('subjectList.list');
 
             Route::prefix('/{subjectId}')->group(function () {
-                Route::get('/list', [StudentsSubjectController::class, 'listMaterial'])->name('subject.listMaterial');
+                Route::get('/list', [StudentsSubjectController::class, 'listMaterial'])->name('subjectList.listMaterial');
 
                 Route::prefix('/assignment')->group(function () {
                     Route::get('/{assignmentId}', [AssignmentSubmissionController::class, 'showAssigment'])->name('assignment_student.show');

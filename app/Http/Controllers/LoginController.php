@@ -37,7 +37,15 @@ class LoginController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
             $request->session()->put('user', Auth::user());
-            return redirect()->route('home');
+            if(Auth::user()->role == 'adm'){
+                return redirect()->route('teacher.list');
+            }
+            else if(Auth::user()->role == 'usr'){
+                return redirect()->route('subjectList.list');
+            }
+            else if(Auth::user()->role == 'tch'){
+                return redirect()->route('subject_material.list');
+            }
         }
 
         return back()->withErrors([
@@ -78,6 +86,6 @@ class LoginController extends Controller
         Auth::logout();
         $request->session()->invalidate();
 
-        return redirect()->route('home');
+        return redirect()->route('login');
     }
 }
