@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Hash;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class LoginController extends Controller
 {
@@ -15,6 +17,15 @@ class LoginController extends Controller
             'formData' => (object)[],
         ]);
     }
+
+    public function showFormRegister()
+    {
+        return view('register.registerForm', [
+            'title' => 'Registracija',
+            'formData' => (object)[],
+        ]);
+    }
+
 
     public function login(Request $request)
     {
@@ -32,6 +43,34 @@ class LoginController extends Controller
         return back()->withErrors([
             'username' => 'Napačno uporabniško ime ali geslo.',
         ])->onlyInput('username');
+    }
+
+    public function register(Request $request)
+    {
+
+        $credentials = $request->validate([
+            'username' => ['required', 'max:255', 'unique:users'],
+            'password' => ['required', 'max:255'],
+            'password2' => ['required', 'max:255'],
+            'email' => ['required', 'max:255'],
+            'first_name' => ['required', 'max:255'],
+            'last_name' => ['required', 'max:255'],
+        ]);
+        if($credentials['password'] != $credentials['password2']){
+            return back()->withErrors([
+                'password' => 'Gesli se ne ujemata.',
+            ])->onlyInput('password');
+        }
+            $user = new User();
+            $user->username = $credentials['username'];
+            $user->password = Hash::make($credentials['password']);
+            $user->email = $credentials['email'];
+            $user->first_name = $credentials['first_name'];
+            $user->last_name = $credentials['last_name'];
+
+            $user->save();
+            
+            return redirect()->route('login');
     }
 
     public function logout(Request $request)
