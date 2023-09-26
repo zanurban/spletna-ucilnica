@@ -125,10 +125,8 @@ Route::group(['middleware' => 'usr'], function () {
          * Routes for manipulating profile
          */
         Route::prefix('/profile')->group(function () {
-            Route::get('/new', [ProfileController::class, 'showForm'])->name('profile.create');
-            Route::post('/new', [ProfileController::class, 'save'])->name('profile.create');
-            Route::get('/edit/{studentId}', [ProfileController::class, 'showForm'])->name('profile.update');
-            Route::put('/edit/{studentId}', [ProfileController::class, 'update'])->name('profile.update');
+            Route::get('/edit', [ProfileController::class, 'showForm'])->name('profile.update');
+            Route::put('/edit', [ProfileController::class, 'update'])->name('profile.update');
             //Route::delete('/delete/{studentId}', [ProfileController::class, 'delete'])->name('profile.delete');
             //TODO: check if deletion of profile is possible
         });
@@ -151,8 +149,8 @@ Route::group(['middleware' => 'usr'], function () {
         });
         Route::prefix('/subject_classrooms')->group(function () {
             Route::get('/list', [StudentsSubjectController::class, 'listClasses'])->name('subject_classrooms.list');
-            Route::post('/list', [StudentsSubjectController::class, 'joinSubject'])->name('subject_classrooms.list.update');
-            Route::delete('/list', [StudentsSubjectController::class, 'showForm'])->name('subject_classrooms.list.delete');
+            Route::post('/join/{teacherSubjectId}', [StudentsSubjectController::class, 'joinSubject'])->name('subject_classrooms.list.update');
+            Route::delete('/delete/{teacherSubjectId}', [StudentsSubjectController::class, 'deleteSubject'])->name('subject_classrooms.list.delete');
         });
     });
 });
