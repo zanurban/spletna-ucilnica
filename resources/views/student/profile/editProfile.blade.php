@@ -6,7 +6,7 @@
         <div class="col-md-12">
             <x-form
                 submitRouteName="profile"
-                backRouteName="home"
+                backRouteName="subjectList.list"
                 :existingData="$formData"
             >
 

@@ -6,7 +6,7 @@
     <div class="col-md-12">
         <x-form
             submitRouteName="register"
-            backRouteName="home"
+            backRouteName="login"
             submitButtonName="Registriraj"
             :existingData="$formData"
         >
