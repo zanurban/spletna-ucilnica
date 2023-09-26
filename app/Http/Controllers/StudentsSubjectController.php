@@ -69,28 +69,36 @@ class StudentsSubjectController extends Controller
             ->leftJoin('users', 'subject_teachers.teacher_id', '=', 'users.id')
             ->select('subjects.subject_name', 'subjects.id as subject_id', 'users.first_name as teacher_first_name', 'users.last_name as teacher_last_name','subject_teachers.id as id')
             ->get();
+
         $subjects_joined = User::where('users.id', Auth::user()->id)
             ->leftJoin('subject_students', 'users.id', '=', 'subject_students.student_id')
             ->leftJoin('subject_teachers', 'subject_students.subject_teacher_id', '=', 'subject_teachers.id')
             ->select('subject_id as subject_id')
             ->get();
+
         return view('student.subjects.listSubjects', [
             'title' => 'Prikaz predmetov',
             'data' => $subjects,
             'data_joined' => $subjects_joined->pluck('subject_id')->toArray(),
         ]);
     }
+
     public function joinSubject(Request $request, SubjectTeacher $teacherSubjectId)
     {
         $Subjectstudent = new SubjectStudent([
             'student_id' => Auth::user()->id,
             'subject_teacher_id' => SubjectTeacher::where('id', $teacherSubjectId->id)->get()->first()->id,
         ]);
+
         $Subjectstudent->save();
+
         return redirect()->route('subject_classrooms.list');
     }
-    public function deleteSubject(Request $request, SubjectTeacher $teacherSubjectId){
+
+    public function deleteSubject(Request $request, SubjectTeacher $teacherSubjectId)
+    {
         SubjectStudent::where('student_id', Auth::user()->id)->where('subject_teacher_id', $teacherSubjectId->id)->delete();
+
         return redirect()->route('subject_classrooms.list');
     }
 
