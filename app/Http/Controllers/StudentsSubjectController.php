@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -35,66 +36,22 @@ class StudentsSubjectController extends Controller
 
     public function listMaterial(Request $request, SubjectTeacher $subjectTeacherId)
     {
-        $userId = Auth::user()->id;
-        // Assuming $subjectTeacherId is an Eloquent model
+        $studentId = Auth::user()->id;
 
-        /*$assignmentsCombined = DB::table('assignments')
-            ->leftJoin('assignment_students', 'assignments.id', '=', 'assignment_students.assignment_id')
-            ->where('assignments.subject_teacher_id', $subjectTeacherId->id)
-            ->where(function ($query) use ($userId) {
-                $query->whereNull('assignment_students.id')
-                    ->orWhere('assignment_students.student_id', $userId);
+        $assignments = Assignment::query()
+            ->select(['assignments.*', 'asub.student_id AS submitted_student_id', 'asub.date_of_submission', 'asub.assignment_student_comment'])
+            ->leftJoin('assignment_students AS asub', function (Builder $join) {
+                $join->on('assignments.id', '=', 'asub.assignment_id');
+                $join->where('asub.student_id', '=', Auth::user()->id);
             })
-            ->select('assignments.id',
-                'assignments.subject_teacher_id',
-                'assignments.assignment_title',
-                'assignments.assignment_description',
-                'assignments.completion_date',
-                'assignments.material_file_path',
-                'assignment_students.date_of_submission',
-                'assignment_students.assignment_student_comment',)
-            ->distinct()
-            ->get();*/
-
-        $assignmentsWithoutSubmissions = DB::table('assignments')
-            ->leftJoin('assignment_students', 'assignments.id', '=', 'assignment_students.assignment_id')
-            ->whereNull('assignment_students.id')
-            ->where('assignments.subject_teacher_id', $subjectTeacherId->id)
-            ->select('assignments.id',
-                'assignments.subject_teacher_id',
-                'assignments.assignment_title',
-                'assignments.assignment_description',
-                'assignments.completion_date',
-                'assignments.material_file_path',
-                'assignment_students.date_of_submission',
-                'assignment_students.assignment_student_comment',
-                'assignment_students.id AS assignment_student_id',)
+            ->where('assignments.subject_teacher_id', '=', $subjectTeacherId->id)
             ->get();
-
-        $assignmentsWithSubmissions = DB::table('assignments')
-            ->join('assignment_students', function ($join) use ($subjectTeacherId, $userId) {
-                $join->on('assignments.id', '=', 'assignment_students.assignment_id')
-                    ->where('assignments.subject_teacher_id', $subjectTeacherId->id)
-                    ->where('assignment_students.student_id', $userId);
-            })
-            ->select('assignments.id',
-                'assignments.subject_teacher_id',
-                'assignments.assignment_title',
-                'assignments.assignment_description',
-                'assignments.completion_date',
-                'assignments.material_file_path',
-                'assignment_students.date_of_submission',
-                'assignment_students.assignment_student_comment',
-                'assignment_students.id AS assignment_student_id',)
-            ->get();
-
 
         return view('student.subject.material.listContent', [
             'title' => Subject::where('id', $subjectTeacherId->subject_id)->get()->first()->subject_name,
             'subjectTeacherId' => $subjectTeacherId->id,
             'materials' => Material::where('subject_teacher_id', $subjectTeacherId->id)->get(),
-            'assignmentsWithoutSubmission' => $assignmentsWithoutSubmissions,
-            'assignmentsWithSubmission' => $assignmentsWithSubmissions,
+            'assignments' => $assignments,
         ]);
     }
 }
