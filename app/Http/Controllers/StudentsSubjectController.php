@@ -2,8 +2,13 @@
 
 namespace App\Http\Controllers;
 
+
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Auth;
+
+use App\Models\SubjectStudent;
+use Auth;
+
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Subject;
@@ -34,6 +39,7 @@ class StudentsSubjectController extends Controller
 
     }
 
+
     public function listMaterial(Request $request, SubjectTeacher $subjectTeacherId)
     {
         $studentId = Auth::user()->id;
@@ -54,4 +60,43 @@ class StudentsSubjectController extends Controller
             'assignments' => $assignments,
         ]);
     }
+    public function listClasses()
+    {
+        $subjects = Subject::leftJoin('subject_teachers', 'subjects.id', '=', 'subject_teachers.subject_id')
+            ->leftJoin('users', 'subject_teachers.teacher_id', '=', 'users.id')
+            ->select('subjects.subject_name', 'subjects.id as subject_id', 'users.first_name as teacher_first_name', 'users.last_name as teacher_last_name','subject_teachers.id as id')
+            ->get();
+
+        $subjects_joined = User::where('users.id', Auth::user()->id)
+            ->leftJoin('subject_students', 'users.id', '=', 'subject_students.student_id')
+            ->leftJoin('subject_teachers', 'subject_students.subject_teacher_id', '=', 'subject_teachers.id')
+            ->select('subject_id as subject_id')
+            ->get();
+
+        return view('student.subjects.listSubjects', [
+            'title' => 'Prijava na predmet',
+            'data' => $subjects,
+            'data_joined' => $subjects_joined->pluck('subject_id')->toArray(),
+        ]);
+    }
+
+    public function joinSubject(Request $request, SubjectTeacher $teacherSubjectId)
+    {
+        $Subjectstudent = new SubjectStudent([
+            'student_id' => Auth::user()->id,
+            'subject_teacher_id' => SubjectTeacher::where('id', $teacherSubjectId->id)->get()->first()->id,
+        ]);
+
+        $Subjectstudent->save();
+
+        return redirect()->route('subject_classrooms.list');
+    }
+
+    public function deleteSubject(Request $request, SubjectTeacher $teacherSubjectId)
+    {
+        SubjectStudent::where('student_id', Auth::user()->id)->where('subject_teacher_id', $teacherSubjectId->id)->delete();
+
+        return redirect()->route('subject_classrooms.list');
+    }
+
 }

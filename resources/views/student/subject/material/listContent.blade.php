@@ -92,7 +92,7 @@
                 @endif
             </table>
         </div>
-
+        <a href="{{ route('subjectList.list') }}" class="btn btn-outline-secondary btn-sm">Nazaj</a>
         @if (session('message'))
             <div class="alert alert-success auto-dismiss">
                 {{ session('message') }}

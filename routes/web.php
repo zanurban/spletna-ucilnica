@@ -23,6 +23,9 @@ Route::group(['middleware' => 'login'], function () {
      */
     Route::get('/login', [LoginController::class, 'showForm'])->name('login');
     Route::post('/login', [LoginController::class, 'login'])->name('login.create');
+
+    Route::get('/register', [LoginController::class, 'showFormRegister'])->name('register');
+    Route::post('/register', [LoginController::class, 'register'])->name('register.create');
 });
 
 Route::group(['middleware' => 'admin'], function () {
@@ -122,22 +125,18 @@ Route::group(['middleware' => 'usr'], function () {
          * Routes for manipulating profile
          */
         Route::prefix('/profile')->group(function () {
-            Route::get('/new', [ProfileController::class, 'showForm'])->name('profile.create');
-            Route::post('/new', [ProfileController::class, 'save'])->name('profile.create');
-            Route::get('/edit/{studentId}', [ProfileController::class, 'showForm'])->name('profile.update');
-            Route::put('/edit/{studentId}', [ProfileController::class, 'update'])->name('profile.update');
-            //Route::delete('/delete/{studentId}', [ProfileController::class, 'delete'])->name('profile.delete');
-            //TODO: check if deletion of profile is possible
+            Route::get('/edit', [ProfileController::class, 'showForm'])->name('profile.update');
+            Route::put('/edit', [ProfileController::class, 'update'])->name('profile.update');
         });
 
         /**
          * Routes for accessing subject and submitting assignments
          */
         Route::prefix('/subject')->group(function () {
-            Route::get('/list', [StudentsSubjectController::class, 'list'])->name('subject.list');
+            Route::get('/list', [StudentsSubjectController::class, 'list'])->name('subjectList.list');
 
             Route::prefix('/{subjectTeacherId}')->group(function () {
-                Route::get('/list', [StudentsSubjectController::class, 'listMaterial'])->name('subject.listMaterial');
+                Route::get('/list', [StudentsSubjectController::class, 'listMaterial'])->name('subjectList.listMaterial');
 
                 Route::prefix('/assignment')->group(function () {
                     Route::get('/{assignmentId}', [AssignmentSubmissionController::class, 'showAssigment'])->name('assignment_student.show');
@@ -145,6 +144,11 @@ Route::group(['middleware' => 'usr'], function () {
                     Route::delete('/delete/{assignmentId}', [AssignmentSubmissionController::class, 'delete'])->name('assignment_student.delete');
                 });
             });
+        });
+        Route::prefix('/subject_classrooms')->group(function () {
+            Route::get('/list', [StudentsSubjectController::class, 'listClasses'])->name('subject_classrooms.list');
+            Route::post('/join/{teacherSubjectId}', [StudentsSubjectController::class, 'joinSubject'])->name('subject_classrooms.list.update');
+            Route::delete('/delete/{teacherSubjectId}', [StudentsSubjectController::class, 'deleteSubject'])->name('subject_classrooms.list.delete');
         });
     });
 });

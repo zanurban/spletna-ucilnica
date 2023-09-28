@@ -21,9 +21,6 @@
                                 <a class="nav-link" href="{{ route('student.list') }}">Uporabniki</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Moj Profil</a>
-                            </li>
-                            <li class="nav-item">
                                 <a class="nav-link" href="{{ route('logout') }}">Odjava</a>
                             </li>
                         </ul>
@@ -35,9 +32,6 @@
                             <a class="nav-link" href="{{ route('subject_material.list') }}">Predmeti</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Moj Profil</a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link" href="{{ route('logout') }}">Odjava</a>
                         </li>
                     </ul>
@@ -46,10 +40,13 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item active">
-                            <a class="nav-link" href="{{ route('subject.list') }}">Predmeti</a>
+                            <a class="nav-link" href="{{ route('subjectList.list') }}">Predmeti</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Moj Profil</a>
+                            <a class="nav-link" href="{{ route('subject_classrooms.list') }}">Prijava na predmet</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('profile.update') }}">Moj Profil</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('logout') }}">Odjava</a>
@@ -59,9 +56,12 @@
                 @else
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ml-auto">
-                        {{-- <li class="nav-item active">
-                            <a class="nav-link" href="{{ route('subject_material.list') }}">Predmeti</a>
-                        </li> --}}
+                        <li class="nav-item active">
+                            <a class="nav-link" href="{{ route('login') }}">Prijava</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="{{ route('register') }}">Registracija</a>
+                        </li>
                     </ul>
                 </div>
                 @endif

@@ -35,6 +35,7 @@
             /* Stretch children */
             padding-top: auto;
             padding-bottom: auto;
+
         }
         #navbarNav{
             height:60px;
@@ -177,6 +178,7 @@
             padding: 20px;
             overflow: scroll;
             overflow-x: hidden;
+            overflow-y: hidden;
         }
 
         h1 {
@@ -241,6 +243,10 @@
         .add:hover svg {
             fill: white;
         
+        }
+        .image{
+            width: 100%;
+            height: 100%;
         }
     </style>
 </head>
