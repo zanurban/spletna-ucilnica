@@ -2,25 +2,15 @@
 
 namespace App\Http\Controllers;
 
-<<<<<<< Updated upstream
-use App\Models\SubjectStudent;
-use Auth;
-=======
-
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Auth;
 use App\Models\SubjectStudent;
->>>>>>> Stashed changes
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Subject;
 use App\Models\Material;
 use App\Models\Assignment;
 use App\Models\SubjectTeacher;
-<<<<<<< Updated upstream
-use Illuminate\Support\Facades\Hash;
-=======
->>>>>>> Stashed changes
 
 class StudentsSubjectController extends Controller
 {
@@ -31,7 +21,7 @@ class StudentsSubjectController extends Controller
             ->leftJoin('subject_teachers', 'subject_students.subject_teacher_id', '=', 'subject_teachers.id')
             ->leftJoin('subjects', 'subject_teachers.subject_id', '=', 'subjects.id')
             ->leftJoin('users as teachers', 'subject_teachers.teacher_id', '=', 'teachers.id')
-            ->select('subjects.subject_name', 'subjects.id as subject_id', 'teachers.first_name as teacher_first_name', 'teachers.last_name as teacher_last_name')
+            ->select('subject_teachers.id AS subject_teacher_id', 'subjects.subject_name', 'subjects.id as subject_id', 'teachers.first_name as teacher_first_name', 'teachers.last_name as teacher_last_name')
             ->get()
             ->filter(function ($item) {
                 return $item->subject_name !== null && $item->subject_id !== null;
@@ -43,35 +33,27 @@ class StudentsSubjectController extends Controller
         ]);
 
     }
-    public function listMaterial(Request $request, Subject $subjectId)
+
+
+    public function listMaterial(Request $request, SubjectTeacher $subjectTeacherId)
     {
+        $studentId = Auth::user()->id;
 
-        $subject_teacher_id = SubjectTeacher::where('subject_id', $subjectId->id)->first()->id;
-
-
-        $assignments = Assignment::leftJoin('assignment_students', 'assignments.id', '=', 'assignment_students.assignment_id')
-            ->where('subject_teacher_id', '=', $subject_teacher_id)
-            ->select([
-                'assignments.id',
-                'assignments.subject_teacher_id',
-                'assignments.assignment_title',
-                'assignments.completion_date',
-                'assignments.material_file_path',
-                'assignment_students.id AS assignment_student_id',
-                'assignment_students.assignment_id',
-                'assignment_students.student_id',
-                'assignment_students.date_of_submission',
-                'assignment_students.assignment_student_comment',
-            ])
+        $assignments = Assignment::query()
+            ->select(['assignments.*', 'asub.student_id AS submitted_student_id', 'asub.date_of_submission', 'asub.assignment_student_comment'])
+            ->leftJoin('assignment_students AS asub', function (Builder $join) {
+                $join->on('assignments.id', '=', 'asub.assignment_id');
+                $join->where('asub.student_id', '=', Auth::user()->id);
+            })
+            ->where('assignments.subject_teacher_id', '=', $subjectTeacherId->id)
             ->get();
 
         return view('student.subject.material.listContent', [
-            'title' => $subjectId->subject_name,
-            'subjectId' => $subjectId->id,
-            'materials' => Material::where('subject_teacher_id', $subject_teacher_id)->get(),
+            'title' => Subject::where('id', $subjectTeacherId->subject_id)->get()->first()->subject_name,
+            'subjectTeacherId' => $subjectTeacherId->id,
+            'materials' => Material::where('subject_teacher_id', $subjectTeacherId->id)->get(),
             'assignments' => $assignments,
         ]);
-
     }
     public function listClasses()
     {

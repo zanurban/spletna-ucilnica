@@ -40,7 +40,7 @@
 
                 @if (count($assignments) > 0)
                     @foreach ($assignments as $row)
-                        <tr @if($row->date_of_submission) style="background-color: lightgreen" @endif>
+                        <tr @if($row?->date_of_submission) style="background-color: lightgreen" @endif>
                             <td>{{ $row?->assignment_title }}</td>
                             <td>{{ $row?->assignment_description }}</td>
                             <td>{{ $row?->completion_date }}</td>
@@ -58,12 +58,12 @@
                             <td>{{ $row->assignment_student_comment }}</td>
                             <td>
                                 <form
-                                    action="{{ route('assignment_student.delete', ['subjectId' => $subjectId, 'assignmentId' => $row?->id]) }}"
+                                    action="{{ route('assignment_student.delete', ['subjectTeacherId' => $subjectTeacherId, 'assignmentId' => $row?->id]) }}"
                                     method="POST">
                                     @method('DELETE')
                                     @csrf
                                     <div class="d-flex gap-2">
-                                        <a href="{{ route('assignment_student.show', ['subjectId' => $subjectId, 'assignmentId' => $row?->id]) }}"
+                                        <a href="{{ route('assignment_student.show', ['subjectTeacherId' => $subjectTeacherId, 'assignmentId' => $row?->id]) }}"
                                            class="btn btn-primary btn-sm add">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                                  fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
