@@ -2,20 +2,15 @@
 
 namespace App\Http\Controllers;
 
-
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Auth;
-
 use App\Models\SubjectStudent;
-use Auth;
-
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Subject;
 use App\Models\Material;
 use App\Models\Assignment;
 use App\Models\SubjectTeacher;
-use Illuminate\Support\Facades\DB;
 
 class StudentsSubjectController extends Controller
 {
