@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\SubjectTeacher;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\Subject;
@@ -16,8 +17,11 @@ class AssignmentSubmissionController extends Controller
     public function showAssigment(Request $request, SubjectTeacher $subjectTeacherId, Assignment $assignmentId)
     {
         $formData = Assignment::select('assignments.id AS id', 'assignment_description', 'assignments.subject_teacher_id', 'assignments.assignment_title', 'assignments.completion_date', 'assignments.material_file_path', 'assignment_students.id AS assignment_student_id', 'assignment_students.assignment_id', 'assignment_students.student_id', 'assignment_students.date_of_submission', 'assignment_students.assignment_student_comment')
-            ->leftJoin('assignment_students', 'assignments.id', '=', 'assignment_students.assignment_id')
-            ->where('assignment_students.assignment_id', '=', $assignmentId->id)
+            ->leftJoin('assignment_students', function (Builder $join) {
+                $join->on('assignments.id', '=', 'assignment_students.assignment_id');
+                $join->where('assignment_students.student_id', '=', Auth::user()->id);
+            })
+            ->where('assignments.id', '=', $assignmentId->id)
             ->get()
             ->first();
 
