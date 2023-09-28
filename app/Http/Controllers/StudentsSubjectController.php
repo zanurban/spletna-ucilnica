@@ -2,15 +2,25 @@
 
 namespace App\Http\Controllers;
 
+<<<<<<< Updated upstream
 use App\Models\SubjectStudent;
 use Auth;
+=======
+
+use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Facades\Auth;
+use App\Models\SubjectStudent;
+>>>>>>> Stashed changes
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Subject;
 use App\Models\Material;
 use App\Models\Assignment;
 use App\Models\SubjectTeacher;
+<<<<<<< Updated upstream
 use Illuminate\Support\Facades\Hash;
+=======
+>>>>>>> Stashed changes
 
 class StudentsSubjectController extends Controller
 {
