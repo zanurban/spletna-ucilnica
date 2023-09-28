@@ -8,8 +8,8 @@
                 submitRouteName="assignment_student"
                 backRouteName="subjectList.list"
                 variableName="assignmentId"
-                optionalVariableName="subjectId"
-                :optionalId="$subjectId"
+                optionalVariableName="subjectTeacherId"
+                :optionalId="$subjectTeacherId"
                 :existingData="$formData"
             >
                 <x-input
