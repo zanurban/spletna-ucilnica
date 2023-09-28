@@ -69,10 +69,10 @@ class AssignmentSubmissionController extends Controller
 
             $assignment->save();
 
-            return redirect()->route('subject.listMaterial', ['subjectTeacherId' => $subjectTeacherId->id])->with('message', 'Naloga je bilo uspešno shranjena z datoteko!');
+            return redirect()->route('subjectList.listMaterial', ['subjectTeacherId' => $subjectTeacherId->id])->with('message', 'Naloga je bilo uspešno shranjena z datoteko!');
         }
 
-        return redirect()->route('subject.listMaterial', ['subjectTeacherId' => $subjectTeacherId?->id])->with('message', 'Naloga je bila uspešno shranjena brez datoteke!');
+        return redirect()->route('subjectList.listMaterial', ['subjectTeacherId' => $subjectTeacherId?->id])->with('message', 'Naloga je bila uspešno shranjena brez datoteke!');
     }
 
     public function resubmit(Request $request, SubjectTeacher $subjectTeacherId, Assignment $assignmentId)
@@ -101,7 +101,7 @@ class AssignmentSubmissionController extends Controller
             'date_of_submission' => date('Y-m-d H:i:s', time()),
         ]);
 
-        return redirect()->route('subject.listMaterial', ['subjectTeacherId' => $subjectTeacherId->id])->with('message', 'Naloga je bila uspešno ponovno oddana!');
+        return redirect()->route('subjectList.listMaterial', ['subjectTeacherId' => $subjectTeacherId->id])->with('message', 'Naloga je bila uspešno ponovno oddana!');
     }
 
     public function delete(Request $request, SubjectTeacher $subjectTeacherId, Assignment $assignmentId)
@@ -116,6 +116,6 @@ class AssignmentSubmissionController extends Controller
 
         $assignment_student->delete();
 
-        return redirect()->route('subject.listMaterial', ['subjectTeacherId' => $subjectTeacherId->id])->with('message', 'Oddaja je bila uspešno izbrisana!');
+        return redirect()->route('subjectList.listMaterial', ['subjectTeacherId' => $subjectTeacherId->id])->with('message', 'Oddaja je bila uspešno izbrisana!');
     }
 }
