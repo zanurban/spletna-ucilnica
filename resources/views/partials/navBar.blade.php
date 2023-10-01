@@ -1,6 +1,6 @@
 
 <div class="sidebar">
-    <div class="box">
+    <div class="box-nav">
         <div>
             <h1>{{ $title ?? 'Šolski sistem' }}</h1>
         </div>

@@ -18,7 +18,7 @@
                             <td>{{ $row?->subject_name }}</td>
                             <td>{{ $row?->teacher_first_name }} {{ $row?->teacher_last_name }}</td>
                             <td>
-                                @if (in_array($row?->subject_id, $data_joined))
+                                @if (in_array($row?->id, $data_joined))
                                     <form
                                         action="{{ route('subject_classrooms.list.delete', ['teacherSubjectId' => $row?->id]) }}"
                                         method="POST">
