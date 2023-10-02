@@ -6,7 +6,7 @@
         <div class="col-md-12">
             <x-form
                 submitRouteName="assignment_student"
-                backRouteName="subjectList.list"
+                backRouteName="subjectList.listMaterial"
                 variableName="assignmentId"
                 optionalVariableName="subjectTeacherId"
                 :optionalId="$subjectTeacherId"

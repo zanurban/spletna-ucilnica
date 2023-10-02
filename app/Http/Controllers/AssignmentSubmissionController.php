@@ -84,13 +84,13 @@ class AssignmentSubmissionController extends Controller
 
         $validatedData = $request->validate([
             'assignment_student_comment' => ['max:512'],
-            'file' => [ 'file', 'max:4096', 'required'],
+            'file' => [ 'file', 'max:4096'],
         ]);
 
         $filepath = 'public/studentAssignments/'. $assignmentId->id . '/'. Auth::user()?->id . '/';
-        Storage::delete(Storage::files($filepath));
 
         if ($request->hasFile('file')) {
+            Storage::delete(Storage::files($filepath));
             $file = $request->file('file');
             $filename = Auth::user()?->last_name. ' ' . Auth::user()?->first_name . ' - ' . $assignmentId->assignment_title . '.' . pathinfo($file->getClientOriginalName(), PATHINFO_EXTENSION);
             $file->storeAs($filepath, $filename);
