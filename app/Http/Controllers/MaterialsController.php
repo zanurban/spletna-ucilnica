@@ -80,7 +80,7 @@ class MaterialsController extends Controller
         $validatedData = $request->validate([
             'material_title' => ['required', 'max:60'],
             'material_description' => ['max:512'],
-            'file' => ['required', 'file', 'max:4096'],
+            'file' => ['file', 'max:4096'],
         ]);
 
         if ($request->hasFile('file')) {
@@ -95,6 +95,12 @@ class MaterialsController extends Controller
             ]);
 
             return redirect()->route('classroom.list', ['subjectId' => $subjectId->id])->with('message', 'Gradivo je bilo uspešno shranjeno!');
+        }
+        else {
+            $materialId->update([
+                'material_title' => $validatedData['material_title'],
+                'material_description' => $validatedData['material_description'],
+            ]);
         }
 
         return redirect()->route('classroom.list', ['subjectId' => $subjectId->id])->with('message', 'Gradivo je bil uspešno urejeno!');

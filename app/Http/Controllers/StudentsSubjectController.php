@@ -65,7 +65,7 @@ class StudentsSubjectController extends Controller
         $subjects_joined = User::where('users.id', Auth::user()->id)
             ->leftJoin('subject_students', 'users.id', '=', 'subject_students.student_id')
             ->leftJoin('subject_teachers', 'subject_students.subject_teacher_id', '=', 'subject_teachers.id')
-            ->select('subject_id as subject_id')
+            ->select('subject_teachers.id as subject_id')
             ->get();
 
         return view('student.subjects.listSubjects', [
