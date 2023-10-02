@@ -47,6 +47,11 @@
                 @error('file')
                 <div class="alert alert-danger auto-dismiss">{{ $message }}</div>
                 @enderror
+                @if (session('error'))
+                <div class="alert alert-danger auto-dismiss">
+                    {{ session('error') }}
+                </div>
+            @endif
             </x-form>
         </div>
     </div>
