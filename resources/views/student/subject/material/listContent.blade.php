@@ -75,7 +75,7 @@
                                             {{ isset($row->date_of_submission) ? 'Spremeni' : 'Oddaj'}}</a>
                                         @if($row->date_of_submission)
                                             <button type="submit" class="btn btn-outline-danger btn-sm"
-                                                    onclick="return confirm('Ali ste preričani, da želite odstraniti oddajo naloge?');">
+                                                    onclick="return confirm('Ali ste preričani, da želite odstraniti oddano nalogo?');">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                                      fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
                                                     <path

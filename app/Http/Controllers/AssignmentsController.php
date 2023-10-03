@@ -64,18 +64,26 @@ class AssignmentsController extends Controller
             'file' => ['file', 'max:4096'],
         ]);
 
-        Storage::delete($assignmentId->material_file_path);
+        
 
         if ($request->hasFile('file')) {
+            Storage::delete($assignmentId->material_file_path);
             $file = $request->file('file');
             $path = $file->store('public/assignments');
+            
+        $assignmentId->update([
+            'assignment_title' => $validatedData['assignment_title'],
+            'assignment_description' => $validatedData['assignment_description'],
+            'completion_date' => $validatedData['completion_date'],
+            'material_file_path' => $path ?? '',
+        ]);
+        return redirect()->route('classroom.list', ['subjectId' => $subjectId->id])->with('message', 'Naloga je bila uspešno urejena z datoteko!');
         }
 
         $assignmentId->update([
             'assignment_title' => $validatedData['assignment_title'],
             'assignment_description' => $validatedData['assignment_description'],
             'completion_date' => $validatedData['completion_date'],
-            'material_file_path' => $path ?? '',
         ]);
 
         return redirect()->route('classroom.list', ['subjectId' => $subjectId->id])->with('message', 'Naloga je bil uspešno urejena!');

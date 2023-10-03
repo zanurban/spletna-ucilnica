@@ -82,7 +82,6 @@ class MaterialsController extends Controller
             'material_description' => ['max:512'],
             'file' => ['file', 'max:4096'],
         ]);
-
         if ($request->hasFile('file')) {
             Storage::delete($materialId->material_file_path);
             $file = $request->file('file');
