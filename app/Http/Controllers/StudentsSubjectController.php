@@ -58,14 +58,14 @@ class StudentsSubjectController extends Controller
     public function listClasses()
     {
         $subjects = Subject::join('subject_teachers', 'subjects.id', '=', 'subject_teachers.subject_id')
-            ->join('users', 'subject_teachers.teacher_id', '=', 'users.id')
+            ->leftJoin('users', 'subject_teachers.teacher_id', '=', 'users.id')
             ->select('subjects.subject_name', 'subjects.id as subject_id', 'users.first_name as teacher_first_name', 'users.last_name as teacher_last_name','subject_teachers.id as id')
             ->whereNotNull('subject_teachers.teacher_id')
             ->get();
 
         $subjects_joined = User::where('users.id', Auth::user()->id)
-            ->join('subject_students', 'users.id', '=', 'subject_students.student_id')
-            ->join('subject_teachers', 'subject_students.subject_teacher_id', '=', 'subject_teachers.id')
+            ->leftJoin('subject_students', 'users.id', '=', 'subject_students.student_id')
+            ->leftJoin('subject_teachers', 'subject_students.subject_teacher_id', '=', 'subject_teachers.id')
             ->select('subject_teachers.id as subject_id')
             ->get();
 
