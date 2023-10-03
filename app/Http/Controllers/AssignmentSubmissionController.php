@@ -84,7 +84,7 @@ class AssignmentSubmissionController extends Controller
 
             $assignment->save();
 
-            return redirect()->route('subjectList.listMaterial', ['subjectTeacherId' => $subjectTeacherId->id])->with('message', 'Naloga je bilo uspešno shranjena z datoteko!');
+            return redirect()->route('subjectList.listMaterial', ['subjectTeacherId' => $subjectTeacherId->id])->with('message', 'Naloga je bilo uspešno oddana z datoteko!');
         }
         else{
             return redirect()->route('assignment_student.show', ['subjectTeacherId' => $subjectTeacherId->id,'assignmentId' => $assignmentId->id])->with('error', 'Naloga mora imeti tudi oddano datoteko!');
