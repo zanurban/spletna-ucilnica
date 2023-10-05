@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Assignment;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class FileDownloadController extends Controller
@@ -47,7 +46,7 @@ class FileDownloadController extends Controller
             abort(404);
         }
     }
-    
+
     public function downloadAssignmentMaterial(Assignment $assignment)
     {
         $filePath = 'public/assignments/' . $assignment->material_file_path;
