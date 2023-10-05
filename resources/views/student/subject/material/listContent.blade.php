@@ -16,7 +16,7 @@
                 @if (count($materials) > 0)
                     @foreach ($materials as $row)
                         <tr>
-                            <td><a href="{{ Storage::url($row->material_file_path) }}">{{ $row->material_title }}</a>
+                            <td><a href="{{ route('file.downloadMaterial', ['filename' => $row->material_file_path]) }}">{{ $row->material_title }}</a>
                             </td>
                             <td>{{ $row->material_description }}</td>
                         </tr>
