@@ -47,7 +47,7 @@
                             <td>{{ $row?->completion_date }}</td>
                             <td>
                                 @if ($row?->material_file_path !== '')
-                                    <a href="{{ route('file.downloadSpecificAssignment', ['assignmentId' => $row->id, 'studentId' => Auth::user()->id]) }}">{{ $row?->assignment_title }}</a>
+                                    <a href="{{ route('file.downloadAssignmentMaterial', ['assignment' => $row->id]) }}">{{ $row?->assignment_title }}</a>
                                 @endif
                             </td>
 

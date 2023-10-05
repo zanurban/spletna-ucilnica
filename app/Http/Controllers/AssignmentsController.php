@@ -12,6 +12,7 @@ use ZipArchive;
 
 class AssignmentsController extends Controller
 {
+    private string $assignmentDirectory = 'public/assignments';
     public function showForm(Request $request, Subject $subjectId, Assignment $assignmentId)
     {
         return view('teacher.assignment.edit', [
@@ -41,9 +42,9 @@ class AssignmentsController extends Controller
 
         if ($request->hasFile('file')) {
             $file = $request->file('file');
-            $path = $file->store('public/assignments');
+            $path = $file->store($this->assignmentDirectory);
 
-            $assignment->material_file_path = $path;
+            $assignment->material_file_path = pathinfo($path)['filename'] . '.' . pathinfo($path)['extension'];
             $assignment->save();
 
             return redirect()->route('classroom.list', ['subjectId' => $subjectId->id])->with('message', 'Naloga je bilo uspešno shranjena z datoteko!');
@@ -64,18 +65,18 @@ class AssignmentsController extends Controller
             'file' => ['file', 'max:4096'],
         ]);
 
-        
+
 
         if ($request->hasFile('file')) {
             Storage::delete($assignmentId->material_file_path);
             $file = $request->file('file');
-            $path = $file->store('public/assignments');
-            
+            $path = $file->store($this->assignmentDirectory);
+
         $assignmentId->update([
             'assignment_title' => $validatedData['assignment_title'],
             'assignment_description' => $validatedData['assignment_description'],
             'completion_date' => $validatedData['completion_date'],
-            'material_file_path' => $path ?? '',
+            'material_file_path' => pathinfo($path)['filename'] . '.' . pathinfo($path)['extension'] ?? '',
         ]);
         return redirect()->route('classroom.list', ['subjectId' => $subjectId->id])->with('message', 'Naloga je bila uspešno urejena z datoteko!');
         }
@@ -92,6 +93,10 @@ class AssignmentsController extends Controller
     public function delete(Request $request, Subject $subjectId, Assignment $assignmentId)
     {
         $assignmentId->delete();
+
+        if(file_exists(Storage::path($this->assignmentDirectory . '/' . $assignmentId->material_file_path))){
+            Storage::delete(Storage::path($this->assignmentDirectory . '/' . $assignmentId->material_file_path));
+        }
 
         return redirect()->route('classroom.list', ['subjectId' => $subjectId->id])->with('message', 'Naloga je bila uspešno izbrisana!');
     }

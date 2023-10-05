@@ -156,3 +156,4 @@ Route::group(['middleware' => 'usr'], function () {
 
 Route::get('/download/material/{filename}', [FileDownloadController::class, 'downloadMaterial'])->name('file.downloadMaterial');
 Route::get('/download/assignment/{assignmentId}/{studentId}', [FileDownloadController::class, 'downloadSpecificAssignment'])->name('file.downloadSpecificAssignment');
+Route::get('/download/assignmentMaterial/{assignment}', [FileDownloadController::class, 'downloadAssignmentMaterial'])->name('file.downloadAssignmentMaterial');
