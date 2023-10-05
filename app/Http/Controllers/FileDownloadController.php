@@ -25,4 +25,28 @@ class FileDownloadController extends Controller
             abort(404);
         }
     }
+
+    public function downloadSpecificAssignment(string $assignmentId, string $studentId)
+    {
+        $filePath = 'public/studentAssignments/' . $assignmentId . '/' . $studentId;
+        $files = scandir(Storage::path($filePath));
+        foreach ($files as $file) {
+            if ($file != '.' && $file != '..') {
+                $filePath .= '/' . $file;
+            }
+        }
+
+        if (Storage::exists($filePath)) {
+            $mimeType = Storage::mimeType($filePath);
+
+            return response()->stream(function () use ($filePath) {
+                Storage::disk('local')->download($filePath);
+            }, 200, [
+                'Content-Type' => $mimeType,
+                'Content-Disposition' => 'attachment; filename="' . basename($filePath) . '"'
+            ]);
+        } else {
+            //abort(404);
+        }
+    }
 }

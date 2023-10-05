@@ -16,7 +16,8 @@
                 @if (count($materials) > 0)
                     @foreach ($materials as $row)
                         <tr>
-                            <td><a href="{{ route('file.downloadMaterial', ['filename' => $row->material_file_path]) }}">{{ $row->material_title }}</a>
+                            <td>
+                                <a href="{{ route('file.downloadMaterial', ['filename' => $row->material_file_path]) }}">{{ $row->material_title }}</a>
                             </td>
                             <td>{{ $row->material_description }}</td>
                         </tr>
@@ -46,13 +47,13 @@
                             <td>{{ $row?->completion_date }}</td>
                             <td>
                                 @if ($row?->material_file_path !== '')
-                                    <a href="{{ Storage::url($row?->material_file_path) }}">{{ $row?->assignment_title }}</a>
+                                    <a href="{{ route('file.downloadSpecificAssignment', ['assignmentId' => $row->id, 'studentId' => Auth::user()->id]) }}">{{ $row?->assignment_title }}</a>
                                 @endif
                             </td>
 
-                            @php($files = \Illuminate\Support\Facades\Storage::files('public/studentAssignments/'. $row?->id . '/'. Auth::user()?->id))
-                            <td>@if(!empty($files))
-                                    <a href="{{ Storage::url($files[0]) }}">Oddana datoteka</a>
+                            <td>@if($row?->date_of_submission)
+                                <a href="{{ route('file.downloadSpecificAssignment', ['assignmentId' => $row->id, 'studentId' => Auth::user()->id]) }}">Oddana
+                                    datoteka</a>
                                 @endif</td>
 
                             <td>{{ $row->assignment_student_comment }}</td>
