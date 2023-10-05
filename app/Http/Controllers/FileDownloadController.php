@@ -14,11 +14,9 @@ class FileDownloadController extends Controller
 
         if (Storage::exists($filePath)) {
             $mimeType = Storage::mimeType($filePath);
+            $fileContents = Storage::disk('local')->get($filePath);
 
-            // Generate a response to force the file download
-            return response()->stream(function () use ($filePath) {
-                Storage::disk('local')->download($filePath);
-            }, 200, [
+            return response($fileContents, 200, [
                 'Content-Type' => $mimeType,
                 'Content-Disposition' => 'attachment; filename="' . $filename . '"',
             ]);
@@ -39,34 +37,32 @@ class FileDownloadController extends Controller
 
         if (Storage::exists($filePath)) {
             $mimeType = Storage::mimeType($filePath);
+            $fileContents = Storage::disk('local')->get($filePath);
 
-            return response()->stream(function () use ($filePath) {
-                Storage::disk('local')->download($filePath);
-            }, 200, [
+            return response($fileContents, 200, [
                 'Content-Type' => $mimeType,
-                'Content-Disposition' => 'attachment; filename="' . basename($filePath) . '"'
+                'Content-Disposition' => 'attachment; filename="' . basename($filePath) . '"',
             ]);
         } else {
             abort(404);
         }
     }
-
+    
     public function downloadAssignmentMaterial(Assignment $assignment)
     {
         $filePath = 'public/assignments/' . $assignment->material_file_path;
 
         if (Storage::exists($filePath)) {
             $mimeType = Storage::mimeType($filePath);
+            $fileContents = Storage::disk('local')->get($filePath);
 
-            // Generate a response to force the file download
-            return response()->stream(function () use ($filePath) {
-                Storage::disk('local')->download($filePath);
-            }, 200, [
+            return response($fileContents, 200, [
                 'Content-Type' => $mimeType,
-                'Content-Disposition' => 'attachment; filename="' . $assignment->material_file_path . '"',
+                'Content-Disposition' => 'attachment; filename="' . basename($filePath) . '"',
             ]);
         } else {
             abort(404);
         }
     }
+
 }
