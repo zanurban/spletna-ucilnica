@@ -10,6 +10,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StudentsSubjectController;
 use App\Http\Controllers\AssignmentSubmissionController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\FileDownloadController;
 
 Route::get('/', function () {
     return view('layout');
@@ -152,3 +153,7 @@ Route::group(['middleware' => 'usr'], function () {
         });
     });
 });
+
+Route::get('/download/material/{filename}', [FileDownloadController::class, 'downloadMaterial'])->name('file.downloadMaterial');
+Route::get('/download/assignment/{assignmentId}/{studentId}', [FileDownloadController::class, 'downloadSpecificAssignment'])->name('file.downloadSpecificAssignment');
+Route::get('/download/assignmentMaterial/{assignment}', [FileDownloadController::class, 'downloadAssignmentMaterial'])->name('file.downloadAssignmentMaterial');
