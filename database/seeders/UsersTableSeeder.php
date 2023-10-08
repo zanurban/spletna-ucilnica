@@ -16,7 +16,7 @@ class UsersTableSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('Users')->insert([
+        DB::table('users')->insert([
             'id' => Str::uuid(),
             'first_name' => 'Maj',
             'last_name' => 'Zabukovnik',
@@ -28,7 +28,7 @@ class UsersTableSeeder extends Seeder
             'updated_at' => now(),
         ]);
 
-        DB::table('Users')->insert([
+        DB::table('users')->insert([
             'id' => Str::uuid(),
             'first_name' => 'Žan',
             'last_name' => 'Škorja',
@@ -40,7 +40,7 @@ class UsersTableSeeder extends Seeder
             'updated_at' => now(),
         ]);
 
-        DB::table('Users')->insert([
+        DB::table('users')->insert([
             'id' => Str::uuid(),
             'first_name' => 'Lan',
             'last_name' => 'Stokavnik',

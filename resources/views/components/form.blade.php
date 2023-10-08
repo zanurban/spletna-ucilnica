@@ -1,10 +1,21 @@
-<form
-    class="form"
-    action="{{ isset($existingData->id) ? route($submitRouteName . '.update', [$variableName => $existingData->id, $optionalVariableName => $optionalId]) : route($submitRouteName . '.create', [$optionalVariableName => $optionalId]) }}"
-    method="POST"
-    enctype="multipart/form-data">
+<form class="form"
+    action="{{ isset($existingData->id)
+        ? route(
+            $submitRouteName . '.update',
+            array_filter([
+                $variableName ?? 'default_variable_name' => $existingData->id ?? null,
+                $optionalVariableName ?? null => $optionalId ?? null,
+            ]),
+        )
+        : route(
+            $submitRouteName . '.create',
+            array_filter([
+                $optionalVariableName ?? null => $optionalId ?? null,
+            ]),
+        ) }}"
+    method="POST" enctype="multipart/form-data">
     @csrf
-    @if(isset($existingData->id))
+    @if (isset($existingData->id))
         @method('PUT')
     @endif
 
@@ -12,6 +23,10 @@
         {{ $slot }}
     </div>
 
-    <button type="submit" class="btn btn-primary">{{ $submitButtonName }}</button>
-    <a href="{{ route($backRouteName, [$optionalVariableName => $optionalId]) }}" class="btn btn-default" style="margin-left: 10px">Nazaj</a>
+    <button type="submit" class="btn btn-primary">{{ $submitButtonName ?? 'Shrani' }}</button>
+    <a href="{{ isset($optionalVariableName)
+        ? route($backRouteName, [$optionalVariableName => $optionalId])
+        : route($backRouteName) }}"
+        class="btn btn-default" style="margin-left: 10px">Nazaj</a>
+
 </form>

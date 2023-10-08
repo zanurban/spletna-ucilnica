@@ -8,9 +8,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use ZipArchive;
 
 class AssignmentsController extends Controller
 {
+    private string $assignmentDirectory = 'public/assignments';
     public function showForm(Request $request, Subject $subjectId, Assignment $assignmentId)
     {
         return view('teacher.assignment.edit', [
@@ -26,7 +28,7 @@ class AssignmentsController extends Controller
             'assignment_title' => ['required', 'max:60'],
             'assignment_description' => ['max:512'],
             'completion_date' => ['required', 'date', 'after:today'],
-            'file' => [ 'file', 'max:4096'],
+            'file' => ['file', 'max:4096'],
         ]);
 
         $assignment = new Assignment([
@@ -40,9 +42,9 @@ class AssignmentsController extends Controller
 
         if ($request->hasFile('file')) {
             $file = $request->file('file');
-            $path = $file->store('public/assignments');
+            $path = $file->store($this->assignmentDirectory);
 
-            $assignment->material_file_path = $path;
+            $assignment->material_file_path = pathinfo($path)['filename'] . '.' . pathinfo($path)['extension'];
             $assignment->save();
 
             return redirect()->route('classroom.list', ['subjectId' => $subjectId->id])->with('message', 'Naloga je bilo uspešno shranjena z datoteko!');
@@ -60,21 +62,29 @@ class AssignmentsController extends Controller
             'assignment_title' => ['required', 'max:60'],
             'assignment_description' => ['max:512'],
             'completion_date' => ['required', 'date', 'after:today'],
-            'file' => [ 'file', 'max:4096'],
+            'file' => ['file', 'max:4096'],
         ]);
 
-        Storage::delete($assignmentId->material_file_path);
+
 
         if ($request->hasFile('file')) {
+            Storage::delete($assignmentId->material_file_path);
             $file = $request->file('file');
-            $path = $file->store('public/assignments');
+            $path = $file->store($this->assignmentDirectory);
+
+        $assignmentId->update([
+            'assignment_title' => $validatedData['assignment_title'],
+            'assignment_description' => $validatedData['assignment_description'],
+            'completion_date' => $validatedData['completion_date'],
+            'material_file_path' => pathinfo($path)['filename'] . '.' . pathinfo($path)['extension'] ?? '',
+        ]);
+        return redirect()->route('classroom.list', ['subjectId' => $subjectId->id])->with('message', 'Naloga je bila uspešno urejena z datoteko!');
         }
 
         $assignmentId->update([
             'assignment_title' => $validatedData['assignment_title'],
             'assignment_description' => $validatedData['assignment_description'],
             'completion_date' => $validatedData['completion_date'],
-            'material_file_path' => $path ?? '',
         ]);
 
         return redirect()->route('classroom.list', ['subjectId' => $subjectId->id])->with('message', 'Naloga je bil uspešno urejena!');
@@ -84,6 +94,53 @@ class AssignmentsController extends Controller
     {
         $assignmentId->delete();
 
+        if(file_exists(Storage::path($this->assignmentDirectory . '/' . $assignmentId->material_file_path))){
+            Storage::delete(Storage::path($this->assignmentDirectory . '/' . $assignmentId->material_file_path));
+        }
+
         return redirect()->route('classroom.list', ['subjectId' => $subjectId->id])->with('message', 'Naloga je bila uspešno izbrisana!');
+    }
+
+    public function downloadAllAssignmentSubmissions(Request $request, Subject $subjectId, Assignment $assignmentId)
+    {
+        $usersThatSubmitted = DB::table('assignment_students')
+            ->where('assignment_id', '=', $assignmentId->id)
+            ->select('student_id')
+            ->get();
+
+        $zip = new ZipArchive();
+        $zipFileName = $assignmentId->assignment_title . '.zip';
+        $zip->open($zipFileName, ZipArchive::CREATE);
+
+        foreach ($usersThatSubmitted as $userId) {
+            $studentAssignmentDirectory = 'public/studentAssignments/' . $assignmentId->id . '/' . $userId->student_id;
+            $files = Storage::files($studentAssignmentDirectory);
+
+            if (count($files) !== 0) {
+                $filePath = storage_path('app/' . $files[0]);
+
+                if (file_exists($filePath)) {
+                    $zip->addFile($filePath, basename($filePath));
+                }
+            }
+        }
+        $zip->close();
+        $zipStream = fopen($zipFileName, 'r');
+
+        $response = response()->stream(
+            function () use ($zipStream) {
+                fpassthru($zipStream);
+                fclose($zipStream);
+            },
+            200,
+            [
+                'Content-Type' => 'application/zip',
+                'Content-Disposition' => 'attachment; filename="' . $zipFileName . '"',
+            ]
+        );
+        unlink($zipFileName);
+
+        return $response;
+
     }
 }

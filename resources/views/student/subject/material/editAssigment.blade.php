@@ -6,10 +6,10 @@
         <div class="col-md-12">
             <x-form
                 submitRouteName="assignment_student"
-                backRouteName="subjectList.list"
+                backRouteName="subjectList.listMaterial"
                 variableName="assignmentId"
-                optionalVariableName="subjectId"
-                :optionalId="$subjectId"
+                optionalVariableName="subjectTeacherId"
+                :optionalId="$subjectTeacherId"
                 :existingData="$formData"
             >
                 <x-input
@@ -47,6 +47,11 @@
                 @error('file')
                 <div class="alert alert-danger auto-dismiss">{{ $message }}</div>
                 @enderror
+                @if (session('error'))
+                <div class="alert alert-danger auto-dismiss">
+                    {{ session('error') }}
+                </div>
+            @endif
             </x-form>
         </div>
     </div>

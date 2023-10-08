@@ -177,8 +177,18 @@
             height: 100%;
             padding: 20px;
             overflow: scroll;
+            overflow-x: auto;
+            overflow-y: auto;
+
+        }
+        .box-nav {
+            width: 100%;
+            height: 100%;
+            padding: 20px;
+            overflow: scroll;
             overflow-x: hidden;
             overflow-y: hidden;
+
         }
 
         h1 {

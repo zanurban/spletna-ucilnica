@@ -66,7 +66,7 @@ class MaterialsController extends Controller
             $file = $request->file('file');
             $path = $file->store('public/materials');
 
-            $material->material_file_path = $path;
+            $material->material_file_path = pathinfo($path)['filename'] . '.' . pathinfo($path)['extension'];
             $material->save();
 
             return redirect()->route('classroom.list', ['subjectId' => $subjectId->id])->with('message', 'Gradivo je bilo uspešno shranjeno!');
@@ -80,21 +80,26 @@ class MaterialsController extends Controller
         $validatedData = $request->validate([
             'material_title' => ['required', 'max:60'],
             'material_description' => ['max:512'],
-            'file' => ['required', 'file', 'max:4096'],
+            'file' => ['file', 'max:4096'],
         ]);
-
         if ($request->hasFile('file')) {
-            Storage::delete($materialId->material_file_path);
+            Storage::delete('public/materials/' . $materialId->material_file_path);
             $file = $request->file('file');
             $path = $file->store('public/materials');
 
             $materialId->update([
                 'material_title' => $validatedData['material_title'],
                 'material_description' => $validatedData['material_description'],
-                'material_file_path' => $path,
+                'material_file_path' => pathinfo($path)['filename'] . '.' . pathinfo($path)['extension'],
             ]);
 
             return redirect()->route('classroom.list', ['subjectId' => $subjectId->id])->with('message', 'Gradivo je bilo uspešno shranjeno!');
+        }
+        else {
+            $materialId->update([
+                'material_title' => $validatedData['material_title'],
+                'material_description' => $validatedData['material_description'],
+            ]);
         }
 
         return redirect()->route('classroom.list', ['subjectId' => $subjectId->id])->with('message', 'Gradivo je bil uspešno urejeno!');
@@ -103,6 +108,10 @@ class MaterialsController extends Controller
     public function delete(Request $request, Subject $subjectId, Material $materialId)
     {
         $materialId->delete();
+
+        if(file_exists(Storage::path('public/materials/' . $materialId->material_file_path))){
+            Storage::delete('public/materials/' . $materialId->material_file_path);
+        }
 
         return redirect()->route('classroom.list', ['subjectId' => $subjectId->id])->with('message', 'Gradivo je bilo uspešno izbrisano!');
     }

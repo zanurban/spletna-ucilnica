@@ -18,7 +18,7 @@
                             <td>{{ $row?->subject_name }}</td>
                             <td>{{ $row?->teacher_first_name }} {{ $row?->teacher_last_name }}</td>
                             <td>
-                                @if (in_array($row?->subject_id, $data_joined))
+                                @if (in_array($row?->id, $data_joined))
                                     <form
                                         action="{{ route('subject_classrooms.list.delete', ['teacherSubjectId' => $row?->id]) }}"
                                         method="POST">
@@ -26,7 +26,7 @@
                                         @csrf
                                         <div class="d-flex gap-2">
                                             <button type="submit" class="btn btn-outline-danger btn-sm"
-                                                onclick="return confirm('Ali ste preričani, da želite izbrisati ta element?');">
+                                                onclick="return confirm('Ali ste preričani, da želite izpisati s tega predmeta?');">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                                     fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
                                                     <path
@@ -44,7 +44,7 @@
                                         @csrf
                                         <div class="d-flex gap-2">
                                             <button type="submit" class="btn btn-primary btn-sm add"
-                                                onclick="return confirm('Ali ste preričani, da želite prijaviti na predmet?');">
+                                                onclick="return confirm('Ali ste preričani, da želite prijaviti na ta predmet?');">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                                  fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
                                                 <path

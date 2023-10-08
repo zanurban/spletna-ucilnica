@@ -16,7 +16,8 @@
                 @if (count($materials) > 0)
                     @foreach ($materials as $row)
                         <tr>
-                            <td><a href="{{ Storage::url($row->material_file_path) }}">{{ $row->material_title }}</a>
+                            <td>
+                                <a href="{{ route('file.downloadMaterial', ['filename' => $row->material_file_path]) }}">{{ $row->material_title }}</a>
                             </td>
                             <td>{{ $row->material_description }}</td>
                         </tr>
@@ -40,30 +41,30 @@
 
                 @if (count($assignments) > 0)
                     @foreach ($assignments as $row)
-                        <tr @if($row->date_of_submission) style="background-color: lightgreen" @endif>
+                        <tr @if($row?->date_of_submission) style="background-color: lightgreen" @endif>
                             <td>{{ $row?->assignment_title }}</td>
                             <td>{{ $row?->assignment_description }}</td>
                             <td>{{ $row?->completion_date }}</td>
                             <td>
                                 @if ($row?->material_file_path !== '')
-                                    <a href="{{ Storage::url($row?->material_file_path) }}">{{ $row?->assignment_title }}</a>
+                                    <a href="{{ route('file.downloadAssignmentMaterial', ['assignment' => $row->id]) }}">{{ $row?->assignment_title }}</a>
                                 @endif
                             </td>
 
-                            @php($files = \Illuminate\Support\Facades\Storage::files('public/studentAssignments/'. $row?->id . '/'. Auth::user()?->id))
-                            <td>@if(!empty($files))
-                                    <a href="{{ Storage::url($files[0]) }}">Oddana datoteka</a>
+                            <td>@if($row?->date_of_submission)
+                                <a href="{{ route('file.downloadSpecificAssignment', ['assignmentId' => $row->id, 'studentId' => Auth::user()->id]) }}">Oddana
+                                    datoteka</a>
                                 @endif</td>
 
                             <td>{{ $row->assignment_student_comment }}</td>
                             <td>
                                 <form
-                                    action="{{ route('assignment_student.delete', ['subjectId' => $subjectId, 'assignmentId' => $row?->id]) }}"
+                                    action="{{ route('assignment_student.delete', ['subjectTeacherId' => $subjectTeacherId, 'assignmentId' => $row?->id]) }}"
                                     method="POST">
                                     @method('DELETE')
                                     @csrf
                                     <div class="d-flex gap-2">
-                                        <a href="{{ route('assignment_student.show', ['subjectId' => $subjectId, 'assignmentId' => $row?->id]) }}"
+                                        <a href="{{ route('assignment_student.show', ['subjectTeacherId' => $subjectTeacherId, 'assignmentId' => $row?->id]) }}"
                                            class="btn btn-primary btn-sm add">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                                  fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
@@ -75,7 +76,7 @@
                                             {{ isset($row->date_of_submission) ? 'Spremeni' : 'Oddaj'}}</a>
                                         @if($row->date_of_submission)
                                             <button type="submit" class="btn btn-outline-danger btn-sm"
-                                                    onclick="return confirm('Ali ste preričani, da želite odstraniti oddajo naloge?');">
+                                                    onclick="return confirm('Ali ste preričani, da želite odstraniti oddano nalogo?');">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                                      fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
                                                     <path
