@@ -46,7 +46,7 @@
                             <a class="nav-link" href="{{ route('subject_classrooms.list') }}">Prijava na predmet</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('profile.update') }}">Moj Profil</a>
+                            <a class="nav-link" href="{{ route('profile.update') }}">Moj profil</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('logout') }}">Odjava</a>
