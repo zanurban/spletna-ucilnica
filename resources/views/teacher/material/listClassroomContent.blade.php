@@ -147,5 +147,10 @@
                 {{ session('message') }}
             </div>
         @endif
+        @if (session('error'))
+            <div class="alert alert-danger auto-dismiss">
+                {{ session('error') }}
+            </div>
+        @endif
     </div>
 @endsection
