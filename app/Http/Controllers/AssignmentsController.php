@@ -110,13 +110,15 @@ class AssignmentsController extends Controller
 
         $zip = new ZipArchive();
         $zipFileName = $assignmentId->assignment_title . '.zip';
-        $zip->open($zipFileName, ZipArchive::CREATE);
+
+        $filesExist = false;
 
         foreach ($usersThatSubmitted as $userId) {
             $studentAssignmentDirectory = 'public/studentAssignments/' . $assignmentId->id . '/' . $userId->student_id;
             $files = Storage::files($studentAssignmentDirectory);
 
             if (count($files) !== 0) {
+                $filesExist = true;
                 $filePath = storage_path('app/' . $files[0]);
 
                 if (file_exists($filePath)) {
@@ -124,6 +126,10 @@ class AssignmentsController extends Controller
                 }
             }
         }
+        if (!$filesExist) {
+            return redirect()->route('classroom.list', ['subjectId' => $subjectId->id])->with('error', 'Ni datotek za prenos!');
+        }
+        $zip->open($zipFileName, ZipArchive::CREATE);
         $zip->close();
         $zipStream = fopen($zipFileName, 'r');
 
