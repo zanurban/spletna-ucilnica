@@ -35,7 +35,7 @@ class AssignmentsController extends Controller
             'assignment_title' => $validatedData['assignment_title'],
             'assignment_description' => $validatedData['assignment_description'],
             'completion_date' => $validatedData['completion_date'],
-            'subject_teacher_id' => (string)DB::table('subject_teachers')
+            'subject_teacher_id' => (string) DB::table('subject_teachers')
                 ->where('teacher_id', Auth::user()->id)
                 ->where('subject_id', $subjectId->id)->select('id')->first()->id,
         ]);
@@ -72,13 +72,13 @@ class AssignmentsController extends Controller
             $file = $request->file('file');
             $path = $file->store($this->assignmentDirectory);
 
-        $assignmentId->update([
-            'assignment_title' => $validatedData['assignment_title'],
-            'assignment_description' => $validatedData['assignment_description'],
-            'completion_date' => $validatedData['completion_date'],
-            'material_file_path' => pathinfo($path)['filename'] . '.' . pathinfo($path)['extension'] ?? '',
-        ]);
-        return redirect()->route('classroom.list', ['subjectId' => $subjectId->id])->with('message', 'Naloga je bila uspešno urejena z datoteko!');
+            $assignmentId->update([
+                'assignment_title' => $validatedData['assignment_title'],
+                'assignment_description' => $validatedData['assignment_description'],
+                'completion_date' => $validatedData['completion_date'],
+                'material_file_path' => pathinfo($path)['filename'] . '.' . pathinfo($path)['extension'] ?? '',
+            ]);
+            return redirect()->route('classroom.list', ['subjectId' => $subjectId->id])->with('message', 'Naloga je bila uspešno urejena z datoteko!');
         }
 
         $assignmentId->update([
@@ -94,7 +94,7 @@ class AssignmentsController extends Controller
     {
         $assignmentId->delete();
 
-        if(file_exists(Storage::path($this->assignmentDirectory . '/' . $assignmentId->material_file_path))){
+        if (file_exists(Storage::path($this->assignmentDirectory . '/' . $assignmentId->material_file_path))) {
             Storage::delete(Storage::path($this->assignmentDirectory . '/' . $assignmentId->material_file_path));
         }
 
@@ -103,15 +103,28 @@ class AssignmentsController extends Controller
 
     public function downloadAllAssignmentSubmissions(Request $request, Subject $subjectId, Assignment $assignmentId)
     {
+        // Define the directory and filename for the new zip file
+        $zipDirectory = storage_path('app/public/zip_files/');
+        $zipFileName = $assignmentId->assignment_title . '.zip';
+        $zipFilePath = $zipDirectory . $zipFileName;
+
+        // Check if the old zip file exists and delete it if it does
+        if (file_exists($zipFilePath)) {
+            unlink($zipFilePath);
+        }
+
         $usersThatSubmitted = DB::table('assignment_students')
             ->where('assignment_id', '=', $assignmentId->id)
             ->select('student_id')
             ->get();
 
         $zip = new ZipArchive();
-        $zipFileName = $assignmentId->assignment_title . '.zip';
 
         $filesExist = false;
+
+        if ($zip->open($zipFilePath, ZipArchive::CREATE) !== true) {
+            return redirect()->route('classroom.list', ['subjectId' => $subjectId->id])->with('error', 'Napaka pri ustvarjanju arhiva!');
+        }
 
         foreach ($usersThatSubmitted as $userId) {
             $studentAssignmentDirectory = 'public/studentAssignments/' . $assignmentId->id . '/' . $userId->student_id;
@@ -119,19 +132,26 @@ class AssignmentsController extends Controller
 
             if (count($files) !== 0) {
                 $filesExist = true;
-                $filePath = storage_path('app/' . $files[0]);
+                foreach ($files as $file) {
+                    $filePath = storage_path('app/' . $file);
 
-                if (file_exists($filePath)) {
-                    $zip->addFile($filePath, basename($filePath));
+                    if (file_exists($filePath)) {
+                        // Add each file to the open zip archive
+                        $zip->addFile($filePath, basename($filePath));
+                    }
                 }
             }
         }
+
+        // Close the zip archive
+        $zip->close();
+
         if (!$filesExist) {
             return redirect()->route('classroom.list', ['subjectId' => $subjectId->id])->with('error', 'Ni datotek za prenos!');
         }
-        $zip->open($zipFileName, ZipArchive::CREATE);
-        $zip->close();
-        $zipStream = fopen($zipFileName, 'r');
+
+        // Open the zip file for reading
+        $zipStream = fopen($zipFilePath, 'r');
 
         $response = response()->stream(
             function () use ($zipStream) {
@@ -144,9 +164,9 @@ class AssignmentsController extends Controller
                 'Content-Disposition' => 'attachment; filename="' . $zipFileName . '"',
             ]
         );
-        unlink($zipFileName);
 
         return $response;
-
     }
+
+
 }
